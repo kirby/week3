@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6185.11" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6205" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6190.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6198"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -25,18 +25,21 @@
                                     <action selector="buttonPressedToSelectImage:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5IJ-pS-ot7"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1Cv-zv-CdI">
-                                <rect key="frame" x="20" y="28" width="560" height="526"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="silhouette.jpeg" translatesAutoresizingMaskIntoConstraints="NO" id="1Cv-zv-CdI">
+                                <rect key="frame" x="200" y="200" width="200" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="iNl-bh-qau"/>
+                                    <constraint firstAttribute="height" constant="200" id="k5T-m3-Jgq"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Seg-03-423" firstAttribute="top" secondItem="1Cv-zv-CdI" secondAttribute="bottom" constant="8" symbolic="YES" id="EKb-Yf-IlL"/>
-                            <constraint firstAttribute="centerX" secondItem="Seg-03-423" secondAttribute="centerX" id="IPd-2T-r6E"/>
-                            <constraint firstItem="1Cv-zv-CdI" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" symbolic="YES" id="UbL-4O-jp3"/>
-                            <constraint firstItem="1Cv-zv-CdI" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" symbolic="YES" id="erK-3f-glu"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Seg-03-423" secondAttribute="bottom" constant="20" symbolic="YES" id="imE-Ok-Lym"/>
-                            <constraint firstAttribute="trailing" secondItem="1Cv-zv-CdI" secondAttribute="trailing" constant="20" symbolic="YES" id="yun-1g-dhK"/>
+                            <constraint firstAttribute="centerY" secondItem="1Cv-zv-CdI" secondAttribute="centerY" id="6SB-Wt-Xzu"/>
+                            <constraint firstItem="1Cv-zv-CdI" firstAttribute="centerX" secondItem="y3c-jy-aDJ" secondAttribute="centerX" id="LrD-UI-1BC"/>
+                            <constraint firstAttribute="centerX" secondItem="1Cv-zv-CdI" secondAttribute="centerX" id="TeF-x3-RAd"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Seg-03-423" secondAttribute="bottom" constant="8" symbolic="YES" id="imE-Ok-Lym"/>
+                            <constraint firstAttribute="centerX" secondItem="Seg-03-423" secondAttribute="centerX" id="jsd-Ay-jsE"/>
                         </constraints>
                     </view>
                     <connections>
@@ -47,4 +50,7 @@
             </objects>
         </scene>
     </scenes>
+    <resources>
+        <image name="silhouette.jpeg" width="191" height="264"/>
+    </resources>
 </document>

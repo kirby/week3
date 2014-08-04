@@ -22,36 +22,40 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // add Saved Photos Album image picker
         self.imagePicker = UIImagePickerController()
-        self.imagePicker.editing = true
-        self.imagePicker.setEditing(true, animated: true)
+        self.imagePicker.allowsEditing = true
+        //        self.imagePicker.setEditing(true, animated: true)
         self.imagePicker.delegate = self
         self.imagePicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
         
         var actionSavedPhotosAlbum = UIAlertAction(title: "Photo Album", style: UIAlertActionStyle.Default, handler: {
             (action : UIAlertAction!) in
-                self.presentViewController(self.imagePicker, animated: true, completion: nil)
-            })
+            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+        })
         alertController.addAction(actionSavedPhotosAlbum)
         
         // if available add Camera picker
         if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)) {
             
             self.cameraPicker = UIImagePickerController()
-            self.cameraPicker!.editing = true
-            self.cameraPicker!.setEditing(true, animated: true)
+            self.cameraPicker!.allowsEditing = true
+            //            self.cameraPicker!.setEditing(true, animated: true)
             self.cameraPicker!.delegate = self
             self.cameraPicker!.sourceType = UIImagePickerControllerSourceType.Camera
             var actionCamera = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default, handler: {
                 (action : UIAlertAction!) in
-                    self.presentViewController(self.cameraPicker, animated: true, completion: nil)
-                })
+
+                self.presentViewController(self.cameraPicker, animated: true, completion: nil)
+            })
             alertController.addAction(actionCamera)
         }
         
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        println("viewDidAppear")
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,17 +63,22 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Dispose of any resources that can be recreated.
     }
     
+    func presentCameraPicker() {
+        self.presentViewController(self.cameraPicker, animated: true, completion: {
+            () in
+            println("cameraPicker completion")
+        })
+    }
+    
     // MARK: - UIImagePickerControllerDelegate
 
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]!) {
         
-        println("didFinishPickingMediaWithInfo picker = \(picker)")
-//        self.imagePicker.setEditing(true, animated: true)
-        self.imageView.image = info[UIImagePickerControllerOriginalImage] as UIImage
-//        self.imageView.image = (info[UIImagePickerControllerEditedImage] as UIImage)
-        // UIImagePickerControllerMediaURL
-        // UIImagePickerControllerReferenceURL
-        // UIImagePickerControllerMediaMetadata
+        println("didFinishPickingMediaWithInfo")
+        
+        NSOperationQueue.mainQueue().addOperationWithBlock({
+            self.imageView.image = info[UIImagePickerControllerEditedImage] as UIImage
+        })
         picker.dismissViewControllerAnimated(true, completion: nil)
         
     }
