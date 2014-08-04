@@ -12,7 +12,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                             
     @IBOutlet weak var imageView: UIImageView!
     @IBAction func buttonPressedToSelectImage(sender: AnyObject) {
-//        self.presentViewController(imagePicker, animated: true, completion: nil)
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
@@ -23,9 +22,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        // add Saved Photos Album image picker
         self.imagePicker = UIImagePickerController()
         self.imagePicker.editing = true
+        self.imagePicker.setEditing(true, animated: true)
         self.imagePicker.delegate = self
         self.imagePicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
         
@@ -35,9 +36,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             })
         alertController.addAction(actionSavedPhotosAlbum)
         
+        // if available add Camera picker
         if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)) {
+            
             self.cameraPicker = UIImagePickerController()
             self.cameraPicker!.editing = true
+            self.cameraPicker!.setEditing(true, animated: true)
             self.cameraPicker!.delegate = self
             self.cameraPicker!.sourceType = UIImagePickerControllerSourceType.Camera
             var actionCamera = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default, handler: {
@@ -46,6 +50,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 })
             alertController.addAction(actionCamera)
         }
+        
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,12 +63,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]!) {
         
-        self.imageView.image = (info[UIImagePickerControllerOriginalImage] as UIImage)
+        println("didFinishPickingMediaWithInfo picker = \(picker)")
+//        self.imagePicker.setEditing(true, animated: true)
+        self.imageView.image = info[UIImagePickerControllerOriginalImage] as UIImage
+//        self.imageView.image = (info[UIImagePickerControllerEditedImage] as UIImage)
         // UIImagePickerControllerMediaURL
         // UIImagePickerControllerReferenceURL
         // UIImagePickerControllerMediaMetadata
         picker.dismissViewControllerAnimated(true, completion: nil)
         
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController!) {
+        picker.dismissViewControllerAnimated(true, completion: nil)
     }
 
 }
