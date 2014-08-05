@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import Photos
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, PhotoSelectedDelegate {
                             
     @IBOutlet weak var imageView: UIImageView!
     @IBAction func buttonPressedToSelectImage(sender: AnyObject) {
@@ -25,13 +26,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // add Saved Photos Album image picker
         self.imagePicker = UIImagePickerController()
         self.imagePicker.allowsEditing = true
-        //        self.imagePicker.setEditing(true, animated: true)
         self.imagePicker.delegate = self
         self.imagePicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
         
         var actionSavedPhotosAlbum = UIAlertAction(title: "Photo Album", style: UIAlertActionStyle.Default, handler: {
             (action : UIAlertAction!) in
-            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+//            self.presentViewController(self.imagePicker, animated: true, completion: nil)
+                println("ViewController performSegue with identifier ShowPhotoCollection")
+                self.performSegueWithIdentifier("ShowPhotoCollection", sender: self)
         })
         alertController.addAction(actionSavedPhotosAlbum)
         
@@ -40,12 +42,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
             self.cameraPicker = UIImagePickerController()
             self.cameraPicker!.allowsEditing = true
-            //            self.cameraPicker!.setEditing(true, animated: true)
             self.cameraPicker!.delegate = self
             self.cameraPicker!.sourceType = UIImagePickerControllerSourceType.Camera
             var actionCamera = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default, handler: {
-                (action : UIAlertAction!) in
-
+                (action : UIAlertAction!) -> Void in
+                println("self.view = \(self.view)\n")
+                self.dismissViewControllerAnimated(false, completion: nil)
+//                self.alertController.view.removeFromSuperview()
+//                self.dismissViewControllerAnimated(false, completion: {
+//                    () -> Void in
+//                    self.presentViewController(self.cameraPicker, animated: true, completion: nil)
+//                })
                 self.presentViewController(self.cameraPicker, animated: true, completion: nil)
             })
             alertController.addAction(actionCamera)
@@ -56,6 +63,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidAppear(animated: Bool) {
         println("viewDidAppear")
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+        if segue.identifier == "ShowPhotoCollection" {
+
+            let requestOptions = PHFetchOptions()
+            let collectionVC = segue.destinationViewController as CollectionViewController
+            collectionVC.photoAssets = PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Image, options: nil)
+            collectionVC.delegate = self
+            println("photoAssets.count = \(collectionVC.photoAssets.count)")
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -75,16 +93,32 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]!) {
         
         println("didFinishPickingMediaWithInfo")
-        
-        NSOperationQueue.mainQueue().addOperationWithBlock({
-            self.imageView.image = info[UIImagePickerControllerEditedImage] as UIImage
+
+        self.dismissViewControllerAnimated(true, completion: {
+            NSOperationQueue.mainQueue().addOperationWithBlock({
+                self.imageView.image = info[UIImagePickerControllerEditedImage] as UIImage
+            })
         })
-        picker.dismissViewControllerAnimated(true, completion: nil)
         
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController!) {
         picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    // MARK: PhotoSelectedDelegate
+    
+    func photoSelected(asset: PHAsset) {
+//        println("load this photo up! \(asset)")
+        
+        let targetSize = self.imageView.frame.size
+        
+        PHImageManager.defaultManager().requestImageForAsset(asset, targetSize: targetSize, contentMode: PHImageContentMode.AspectFill, options: nil) {
+            (image, info) -> Void in
+            
+            self.imageView.image = image
+            
+        }
     }
 
 }
