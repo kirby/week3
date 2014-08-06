@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6205" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="9UL-n0-f7t">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6198"/>
+        <capability name="Constraints with attributes relative to the layout margin" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Week 3 App-->
@@ -17,8 +18,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Seg-03-423">
-                                <rect key="frame" x="277" y="562" width="46" height="30"/>
-                                <state key="normal" title="Button">
+                                <rect key="frame" x="256" y="562" width="88" height="30"/>
+                                <state key="normal" title="Select Photo">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -33,23 +34,40 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u29-H4-wEz">
-                                <rect key="frame" x="279" y="408" width="43" height="30"/>
-                                <state key="normal" title="Filter1">
+                                <rect key="frame" x="261" y="408" width="78" height="30"/>
+                                <state key="normal" title="Sepia Filter">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="buttonPressedApplyFilter1:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0kI-ES-y5q"/>
                                 </connections>
                             </button>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="rCl-x4-uH0">
+                                <rect key="frame" x="105" y="446" width="390" height="31"/>
+                                <connections>
+                                    <action selector="sliderValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="Y1I-XX-YY9"/>
+                                </connections>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" highlighted="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C3e-od-57l">
+                                <rect key="frame" x="286" y="484" width="28" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="textColor" red="0.19215686269999999" green="0.58823529409999997" blue="0.83921568629999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="1Cv-zv-CdI" secondAttribute="centerY" id="6SB-Wt-Xzu"/>
+                            <constraint firstAttribute="centerX" secondItem="rCl-x4-uH0" secondAttribute="centerX" id="DKO-eU-IXg"/>
                             <constraint firstItem="1Cv-zv-CdI" firstAttribute="centerX" secondItem="y3c-jy-aDJ" secondAttribute="centerX" id="LrD-UI-1BC"/>
                             <constraint firstAttribute="centerX" secondItem="1Cv-zv-CdI" secondAttribute="centerX" id="TeF-x3-RAd"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="rCl-x4-uH0" secondAttribute="trailing" constant="91" id="UkT-5x-ArR"/>
+                            <constraint firstAttribute="centerX" secondItem="C3e-od-57l" secondAttribute="centerX" id="dUF-lh-Kbc"/>
+                            <constraint firstItem="C3e-od-57l" firstAttribute="top" secondItem="rCl-x4-uH0" secondAttribute="bottom" constant="8" id="hZ6-AF-VWW"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Seg-03-423" secondAttribute="bottom" constant="8" symbolic="YES" id="imE-Ok-Lym"/>
                             <constraint firstAttribute="centerX" secondItem="u29-H4-wEz" secondAttribute="centerX" id="jSF-b1-r0F"/>
                             <constraint firstAttribute="centerX" secondItem="Seg-03-423" secondAttribute="centerX" id="jsd-Ay-jsE"/>
+                            <constraint firstItem="rCl-x4-uH0" firstAttribute="top" secondItem="u29-H4-wEz" secondAttribute="bottom" constant="8" id="oQm-0l-YA5"/>
                             <constraint firstItem="u29-H4-wEz" firstAttribute="top" secondItem="1Cv-zv-CdI" secondAttribute="bottom" constant="8" id="pqg-EI-STc"/>
                         </constraints>
                     </view>
@@ -57,6 +75,8 @@
                     <connections>
                         <outlet property="filter1Button" destination="u29-H4-wEz" id="phh-Ae-dzB"/>
                         <outlet property="imageView" destination="1Cv-zv-CdI" id="1nH-ra-mbc"/>
+                        <outlet property="sepaiLabel" destination="C3e-od-57l" id="9DR-yU-eFl"/>
+                        <outlet property="sepiaSlider" destination="rCl-x4-uH0" id="KiD-GH-j0N"/>
                         <segue destination="u4c-cF-esa" kind="show" identifier="ShowPhotoCollection" id="w8l-Fj-9B5"/>
                     </connections>
                 </viewController>
@@ -116,7 +136,7 @@
                                 </connections>
                             </collectionView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="EnW-1w-35l" firstAttribute="top" secondItem="n3c-iB-rry" secondAttribute="top" id="6Lj-yv-ixW"/>
                             <constraint firstAttribute="bottom" secondItem="EnW-1w-35l" secondAttribute="bottom" id="Uve-4T-1vs"/>
@@ -161,7 +181,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="Ppe-Ri-gy5" secondAttribute="centerX" id="Dug-xL-WUQ"/>
                             <constraint firstAttribute="centerX" secondItem="a1b-Zo-CCH" secondAttribute="centerX" id="Q72-yS-CbH"/>

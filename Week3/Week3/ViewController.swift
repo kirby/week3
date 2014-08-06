@@ -16,6 +16,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var filter1Button: UIButton!
+    @IBOutlet weak var sepiaSlider: UISlider!
+    @IBOutlet weak var sepaiLabel: UILabel!
+    
     @IBAction func buttonPressedToSelectImage(sender: AnyObject) {
         self.presentViewController(alertController, animated: true, completion: nil)
     }
@@ -24,7 +27,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         applyFilter1()
     }
     
+    @IBAction func sliderValueChanged(sender: AnyObject) {
+        self.sepaiLabel.text = NSString(format: "%.01f", sepiaSlider.value)
+    }
+    
     var alertController = UIAlertController(title: "Photo Time", message: "Select a photo to edit", preferredStyle: UIAlertControllerStyle.ActionSheet)
+    
+    var userDefaults = NSUserDefaults.standardUserDefaults()
     
     var imagePicker = UIImagePickerController()
     var cameraPicker : UIImagePickerController? = nil
@@ -36,8 +45,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        self.sepaiLabel.text = NSString(format: "%.01f", sepiaSlider.value)
         if self.photoAsset == nil {
+            println("photoAsset is not set, let's check user defaults")
             self.filter1Button.enabled = false
+            // try to load from user defaults
+            if let assetURL = userDefaults.valueForKey("assetURL") as? NSURL {
+                println("read asset from user defaults \(assetURL)")
+            }
         } else {
             self.filter1Button.enabled = true
         }
@@ -194,13 +209,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 
                 // get a local copy of the image in CIImage
                 var url = input.fullSizeImageURL
+                println("setting URL in user defaults \(url)")
+                self.userDefaults.setURL(url, forKey: "assetURL")
                 var inputImage = CIImage(contentsOfURL: url)
                 
                 // create filter
                 var filter = CIFilter(name: "CISepiaTone")
                 filter.setDefaults()
                 filter.setValue(inputImage, forKey: kCIInputImageKey)
-                filter.setValue(0.8, forKey:kCIInputIntensityKey) // TODO: get this from a slider?
+                
+                // get intensity value from the slider
+                var intensity = CGFloat(self.sepiaSlider.value)
+                println("\(intensity)")
+                
+                filter.setValue(intensity, forKey:kCIInputIntensityKey) // TODO: get this from a slider?
               
                 // apply filter and get output image CIImage, then CGImage, then UIImage
                 var ciImage = filter.outputImage
@@ -242,7 +264,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // MARK: PhotoSelectedDelegate
     
     func photoSelected(asset: PHAsset) {
-        
+
+//        userDefaults.setObject(asset, forKey: "asset")
         self.photoAsset = asset // save this for later use by the filter
         self.filter1Button.enabled = true
         
