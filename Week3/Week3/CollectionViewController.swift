@@ -25,6 +25,7 @@ class CollectionViewController: UIViewController, UICollectionViewDataSource, Ph
         // Do any additional setup after loading the view.
         println("CollectionViewController viewDidLoad")
         self.collectionView.dataSource = self
+//        self.delegate = self
     }
     
     override func viewWillAppear(animated: Bool) {

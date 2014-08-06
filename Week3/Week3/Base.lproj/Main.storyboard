@@ -32,6 +32,15 @@
                                     <constraint firstAttribute="height" constant="200" id="k5T-m3-Jgq"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u29-H4-wEz">
+                                <rect key="frame" x="279" y="408" width="43" height="30"/>
+                                <state key="normal" title="Filter1">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="buttonPressedApplyFilter1:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0kI-ES-y5q"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -39,11 +48,14 @@
                             <constraint firstItem="1Cv-zv-CdI" firstAttribute="centerX" secondItem="y3c-jy-aDJ" secondAttribute="centerX" id="LrD-UI-1BC"/>
                             <constraint firstAttribute="centerX" secondItem="1Cv-zv-CdI" secondAttribute="centerX" id="TeF-x3-RAd"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Seg-03-423" secondAttribute="bottom" constant="8" symbolic="YES" id="imE-Ok-Lym"/>
+                            <constraint firstAttribute="centerX" secondItem="u29-H4-wEz" secondAttribute="centerX" id="jSF-b1-r0F"/>
                             <constraint firstAttribute="centerX" secondItem="Seg-03-423" secondAttribute="centerX" id="jsd-Ay-jsE"/>
+                            <constraint firstItem="u29-H4-wEz" firstAttribute="top" secondItem="1Cv-zv-CdI" secondAttribute="bottom" constant="8" id="pqg-EI-STc"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="vJg-gq-r5E"/>
                     <connections>
+                        <outlet property="filter1Button" destination="u29-H4-wEz" id="phh-Ae-dzB"/>
                         <outlet property="imageView" destination="1Cv-zv-CdI" id="1nH-ra-mbc"/>
                         <segue destination="u4c-cF-esa" kind="show" identifier="ShowPhotoCollection" id="w8l-Fj-9B5"/>
                     </connections>
