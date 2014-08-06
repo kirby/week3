@@ -61,13 +61,13 @@ class CollectionViewController: UIViewController, UICollectionViewDataSource, Ph
 
     func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int {
         //#warning Incomplete method implementation -- Return the number of items in the section
-        println("numberOfItemsInSection = \(self.photoAssets.count)")
+//        println("numberOfItemsInSection = \(self.photoAssets.count)")
         return self.photoAssets.count
     }
 
     func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
         
-        println("cellForItemAtIndexPath \(indexPath)")
+//        println("cellForItemAtIndexPath \(indexPath)")
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as PhotoCell
     
@@ -76,7 +76,7 @@ class CollectionViewController: UIViewController, UICollectionViewDataSource, Ph
         cell.tag = currentTag
         
         let asset = self.photoAssets[indexPath.item] as PHAsset
-        println("asset = \(asset)")
+//        println("asset = \(asset)")
         
         self.imageManager.requestImageForAsset(asset, targetSize: targetSize, contentMode: PHImageContentMode.AspectFill, options: nil) { (image : UIImage!, [NSObject : AnyObject]!) -> Void in
             if (cell.tag == currentTag) {

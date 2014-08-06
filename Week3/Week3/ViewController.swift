@@ -65,7 +65,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
         
         // activity indicator - position
-//        self.activityIndicator.center = CGPoint(x: self.imageView.frame.width / 2, y: self.imageView.frame.height / 2)
         self.activityIndicator.center = CGPoint(x: self.imageView.frame.width / 2, y: self.imageView.frame.height / 2)
         self.imageView.addSubview(activityIndicator)
         
@@ -80,7 +79,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         var actionSavedPhotosAlbum = UIAlertAction(title: "Photo Album", style: UIAlertActionStyle.Default, handler: {
             (action : UIAlertAction!) in
 //            self.presentViewController(self.imagePicker, animated: true, completion: nil)
-                println("ViewController performSegue with identifier ShowPhotoCollection")
                 self.performSegueWithIdentifier("ShowPhotoCollection", sender: self)
         })
         alertController.addAction(actionSavedPhotosAlbum)
@@ -180,6 +178,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // MARK: - UIImagePickerControllerDelegate
 
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]!) {
+        
+        // ask photo library to save this for us
+        let assetCollection = PHAssetCollection()
+        
+        addNewAssetWithImage(info[UIImagePickerControllerEditedImage] as UIImage, toAlbum: assetCollection)
 
         self.dismissViewControllerAnimated(true, completion: {
             NSOperationQueue.mainQueue().addOperationWithBlock({
@@ -211,7 +214,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 var url = input.fullSizeImageURL
                 println("setting URL in user defaults \(url)")
                 self.userDefaults.setURL(url, forKey: "assetURL")
+                
+                var orientation = input.fullSizeImageOrientation
                 var inputImage = CIImage(contentsOfURL: url)
+                inputImage = inputImage.imageByApplyingOrientation(orientation)
                 
                 // create filter
                 var filter = CIFilter(name: "CISepiaTone")
@@ -230,7 +236,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 
                 // get a jpeg copy of the image into memory
                 var uiImage = UIImage(CGImage: cgImage)
-                var jpeg = UIImageJPEGRepresentation(uiImage, 1.0)
+                var jpeg = UIImageJPEGRepresentation(uiImage, 0.25)
                 
                 var contentEditingOutput = PHContentEditingOutput(contentEditingInput: input)
                 var outputURL = contentEditingOutput.renderedContentURL
@@ -261,32 +267,54 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    func addNewAssetWithImage(image: UIImage, toAlbum album:PHAssetCollection) {
+        PHPhotoLibrary.sharedPhotoLibrary().performChanges({
+            // Request creating an asset from the image.
+            let createAssetRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(image)
+            
+//            // Request editing the album.
+//            let albumChangeRequest = PHAssetCollectionChangeRequest(forAssetCollection: album)
+//            
+//            // Get a placeholder for the new asset and add it to the album editing request.
+//            let assetPlaceholder = createAssetRequest.placeholderForCreatedAsset
+//            albumChangeRequest.addAssets([assetPlaceholder])
+            
+            }, completionHandler: { success, error in
+                NSLog("Finished adding asset. %@", (success ? "Success" : error))
+                
+        })
+    }
+    
     // MARK: PhotoSelectedDelegate
     
     func photoSelected(asset: PHAsset) {
 
-//        userDefaults.setObject(asset, forKey: "asset")
         self.photoAsset = asset // save this for later use by the filter
         self.filter1Button.enabled = true
         
-        let targetSize = self.imageView.frame.size  // is this a constant up above?
+        let targetSize = self.imageView.frame.size  // should this be a constant up above?
         
-        PHImageManager.defaultManager().requestImageForAsset(asset, targetSize: targetSize, contentMode: PHImageContentMode.AspectFill, options: nil) {
-            (image, info) -> Void in
+        PHImageManager.defaultManager().requestImageForAsset(
+            asset,
+            targetSize: targetSize,
+            contentMode: PHImageContentMode.AspectFill,
+            options: nil) { (image, info) -> Void in
             
-            NSOperationQueue.mainQueue().addOperationWithBlock({
-//                self.image = image
-                self.imageView.image = image
-                
-                UIView.animateWithDuration(1.0, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
-                    self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-                    self.imageView.transform = CGAffineTransformMakeScale(1.0, -1.0)
-                    self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-                    self.imageView.transform = CGAffineTransformMakeScale(1.0, 1.0)
-                    }, completion: { (succes : Bool) -> Void in
-                        println("animation done")
+                NSOperationQueue.mainQueue().addOperationWithBlock({
+
+                    self.imageView.image = image
+                    
+                    UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                        
+                        self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+                        self.imageView.transform = CGAffineTransformMakeScale(1.0, -1.0)
+                        self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+                        self.imageView.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                        
+                        }, completion: { (succes : Bool) -> Void in
+                            println("animation done")
+                    })
                 })
-            })
         }
     }
 
