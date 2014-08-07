@@ -115,12 +115,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         println("deviceMotionActive = \(coreMotionManager.deviceMotionActive)")
         
         var timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("motionInfo"), userInfo: nil, repeats: true)
-        
-//        for i in 1...1 {
-//            println("\(i)")
-//            var timer = NSTimer(timeInterval: 1.0, target: self, selector: Selector("motionInfo"), userInfo: nil, repeats: true)
-////            println("\(coreMotionManager.deviceMotion!)")
-//        }
+
         coreMotionManager.stopDeviceMotionUpdates()
     }
     
@@ -140,7 +135,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let collectionVC = segue.destinationViewController as CollectionViewController
             collectionVC.photoAssets = PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Image, options: nil)
             collectionVC.delegate = self
-//            println("photoAssets.count = \(collectionVC.photoAssets.count)")
         }
     }
 

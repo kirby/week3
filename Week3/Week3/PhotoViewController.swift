@@ -13,13 +13,14 @@ protocol PhotoSelectedDelegate {
     func photoSelected(asset : PHAsset)
 }
 
-class PhotoViewController: UIViewController {
+class PhotoViewController: UIViewController, FilterAppliedDelegate {
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var filterContainer: UIView!
     
     var asset : PHAsset!
     var delegate : PhotoSelectedDelegate?
+    var filterDelegate : FilterAppliedDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +51,19 @@ class PhotoViewController: UIViewController {
         self.navigationController.popToRootViewControllerAnimated(true)
     }
 
+    // MARK: - FilterAppliedDelegate
+
+    func filterAppledUpdatedImage(image: UIImage) {
+        println("filter applied, need to update my image")
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+        println("prepareForSegue to \(segue.identifier)")
+        if segue.identifier == "ShowFilters" {
+            let filtersVC = segue.destinationViewController as FiltersViewController
+            filtersVC.photoAsset = self.asset
+        }
+    }
     /*
     // MARK: - Navigation
 
