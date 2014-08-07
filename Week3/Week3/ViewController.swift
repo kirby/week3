@@ -273,6 +273,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    /**
+    Save a new camera photo to the Photo Library
+    */
     func addNewAssetWithImage(image: UIImage, toAlbum album:PHAssetCollection) {
         PHPhotoLibrary.sharedPhotoLibrary().performChanges({
             // Request creating an asset from the image.

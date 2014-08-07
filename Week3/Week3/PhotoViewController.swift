@@ -27,23 +27,23 @@ class PhotoViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        var targetSize = CGSize()
-        targetSize = CGSizeMake(self.imageView.frame.width, self.imageView.frame.height)
         
-        PHImageManager.defaultManager().requestImageForAsset(asset, targetSize: targetSize, contentMode: PHImageContentMode.AspectFill, options: nil) {
-            (image, info ) -> Void in
-            self.imageView.image = image
-        }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        super.viewWillAppear(animated)
+        
+        // set target size to match the primary imageView frame
+        var targetSize = CGSizeMake(self.imageView.frame.width, self.imageView.frame.height)
+        
+        // request the image asset and set it to the primary imageView
+        PHImageManager.defaultManager().requestImageForAsset(asset,
+            targetSize: targetSize,
+            contentMode: PHImageContentMode.AspectFill,
+            options: nil) {
+                (image, info ) -> Void in
+                self.imageView.image = image
+            }
     }
     
     @IBAction func buttonPressedToEditPhoto(sender: AnyObject) {
-        println("PhotoViewController buttonPressed")
         self.delegate!.photoSelected(self.asset)
         self.navigationController.popToRootViewControllerAnimated(true)
     }
