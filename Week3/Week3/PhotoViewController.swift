@@ -16,6 +16,7 @@ protocol PhotoSelectedDelegate {
 class PhotoViewController: UIViewController {
 
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var filterContainer: UIView!
     
     var asset : PHAsset!
     var delegate : PhotoSelectedDelegate?
@@ -40,6 +41,7 @@ class PhotoViewController: UIViewController {
             options: nil) {
                 (image, info ) -> Void in
                 self.imageView.image = image
+                // show filters view
             }
     }
     

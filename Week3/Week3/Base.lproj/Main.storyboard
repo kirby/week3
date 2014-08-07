@@ -187,7 +187,7 @@
                                     <constraint firstAttribute="width" constant="250" id="NRa-va-rAO"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="kCn-Nc-zCu" kind="embed" id="5v1-N9-dBb"/>
+                                    <segue destination="kCn-Nc-zCu" kind="embed" identifier="ShowFilters" id="5v1-N9-dBb"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -203,6 +203,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="filterContainer" destination="Zxy-VI-t80" id="Dzl-1x-RfT"/>
                         <outlet property="imageView" destination="Ppe-Ri-gy5" id="hAk-KE-T5m"/>
                     </connections>
                 </viewController>
@@ -228,10 +229,10 @@
             </objects>
             <point key="canvasLocation" x="-7" y="255"/>
         </scene>
-        <!--View Controller-->
+        <!--Filters-->
         <scene sceneID="4ca-ZD-swS">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="kCn-Nc-zCu" sceneMemberID="viewController">
+                <viewController title="Filters" automaticallyAdjustsScrollViewInsets="NO" id="kCn-Nc-zCu" customClass="FiltersViewController" customModule="Week3" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="cm4-oA-Lf8"/>
                         <viewControllerLayoutGuide type="bottom" id="Iuk-Eb-SQK"/>
@@ -239,7 +240,36 @@
                     <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="DjM-d1-TXh">
                         <rect key="frame" x="0.0" y="0.0" width="250" height="212"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="e8b-nc-gBG">
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="sIG-ou-Vbu">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FilterViewCell" id="z2S-1V-h8S" customClass="FilterViewCell" customModule="Week3" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" red="1" green="0.94604807189999995" blue="0.83339742179999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <size key="customSize" width="50" height="50"/>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Iuk-Eb-SQK" firstAttribute="top" secondItem="e8b-nc-gBG" secondAttribute="bottom" id="2OR-oB-AOI"/>
+                            <constraint firstItem="e8b-nc-gBG" firstAttribute="top" secondItem="DjM-d1-TXh" secondAttribute="top" id="Eek-08-RHJ"/>
+                            <constraint firstItem="e8b-nc-gBG" firstAttribute="trailing" secondItem="cm4-oA-Lf8" secondAttribute="leading" id="gXR-k4-mcV"/>
+                            <constraint firstItem="e8b-nc-gBG" firstAttribute="leading" secondItem="cm4-oA-Lf8" secondAttribute="leading" id="p7H-8A-gtc"/>
+                        </constraints>
                     </view>
                     <toolbarItems/>
                 </viewController>
