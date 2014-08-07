@@ -50,8 +50,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             println("photoAsset is not set, let's check user defaults")
             self.filter1Button.enabled = false
             // try to load from user defaults
-            if let assetURL = userDefaults.valueForKey("assetURL") as? NSURL {
+            if let assetURL = userDefaults.URLForKey("assetURL") {
                 println("read asset from user defaults \(assetURL)")
+                var data = NSData.dataWithContentsOfURL(assetURL, options: nil, error: nil)
+                self.imageView.image = UIImage(data: data)
             }
         } else {
             self.filter1Button.enabled = true
@@ -201,7 +203,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             println("applyFilter1")
             self.activityIndicator.startAnimating()
             
-            
             // prepare our app specific format identifier and version info
             let inputOptions = PHContentEditingInputRequestOptions()
             inputOptions.canHandleAdjustmentData = { (data : PHAdjustmentData!) -> Bool in
@@ -211,7 +212,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             photoAsset.requestContentEditingInputWithOptions(inputOptions, completionHandler: { (input : PHContentEditingInput!, info : [NSObject : AnyObject]!) -> Void in
                 
                 // get a local copy of the image in CIImage
-                var url = input.fullSizeImageURL
+                var url : NSURL!
+                if let urlTest = input.fullSizeImageURL {
+                    url = urlTest
+                } else {
+                    return
+                }
                 println("setting URL in user defaults \(url)")
                 self.userDefaults.setURL(url, forKey: "assetURL")
                 
@@ -280,8 +286,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 //            albumChangeRequest.addAssets([assetPlaceholder])
             
             }, completionHandler: { success, error in
-                NSLog("Finished adding asset. %@", (success ? "Success" : error))
-                
+                var message = success ? "photo saved!" : "photo not saved\n\(error)"
         })
     }
     

@@ -42,7 +42,7 @@
                                     <action selector="buttonPressedApplyFilter1:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0kI-ES-y5q"/>
                                 </connections>
                             </button>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="rCl-x4-uH0">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.80000000000000004" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="rCl-x4-uH0">
                                 <rect key="frame" x="105" y="446" width="390" height="31"/>
                                 <connections>
                                     <action selector="sliderValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="Y1I-XX-YY9"/>
