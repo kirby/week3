@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 import Photos
 
+let availableFilters = [ "sepia", "kirby", "kody", "bizarro" ]
+
 class Filter {
     
     var photoAsset : PHAsset!
@@ -24,7 +26,7 @@ class Filter {
     init(photoAsset : PHAsset) {
         self.photoAsset = photoAsset
         // prepare our app specific format identifier and version info
-        inputOptions.canHandleAdjustmentData = { (data : PHAdjustmentData!) -> Bool in
+        self.inputOptions.canHandleAdjustmentData = { (data : PHAdjustmentData!) -> Bool in
             println("canHandleAdjustmentData \(data.formatIdentifier) \(data.formatVersion)")
             return data.formatIdentifier == "com.kirby.filter" && data.formatVersion == "1.0"
         }
@@ -48,12 +50,9 @@ class Filter {
     
     func previewSepia() -> UIImage {
         
-        var image : UIImage!
-        
         photoAsset.requestContentEditingInputWithOptions(inputOptions, completionHandler: { (input : PHContentEditingInput!, info : [NSObject : AnyObject]!) -> Void in
-            
+
             if let inputImage = self.getInputImageFromContentEditingInput(input) {
-                
                 // create filter
                 var filter = CIFilter(name: "CISepiaTone")
                 var intensity = 0.8
@@ -66,11 +65,11 @@ class Filter {
                 var cgImage = self.context.createCGImage(ciImage, fromRect: ciImage.extent())
                 
                 // get a jpeg copy of the image into memory
-                image = UIImage(CGImage: cgImage)
+                var image = UIImage(CGImage: cgImage)
             }
         })
         
-        return image
+        return UIImage(named: "dirLa9Ri9") // testing
     }
     
     func applySepia() {

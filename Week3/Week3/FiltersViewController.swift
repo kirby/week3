@@ -19,27 +19,19 @@ class FiltersViewController: UIViewController, UICollectionViewDataSource {
     
     var photoAsset : PHAsset!
     var image : UIImage!
-    var filters : [Filter]!
+    var filters = Array<Filter>()
     var filterDelegate : FilterAppliedDelegate!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        println("FiltersVC viewDidLoad")
         self.collectionView.dataSource = self
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        for index in 0...3 {
-            println("index = \(index)")
-            filters[index] = Filter(photoAsset: photoAsset)
+        for var index = 0; index < availableFilters.count; index++ {
+            filters.append(Filter(photoAsset: photoAsset))
         }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     // MARK: - UICollectionViewDataSource
@@ -52,9 +44,9 @@ class FiltersViewController: UIViewController, UICollectionViewDataSource {
         println("cellForItemAtIndexPath")
         
         var cell = collectionView.dequeueReusableCellWithReuseIdentifier("FilterViewCell", forIndexPath: indexPath) as FilterViewCell
-        
-        var filteredImage = filters[indexPath.item].previewSepia()
-        cell.imageView.image = filteredImage
+
+//        var filteredImage = filters[indexPath.item].previewSepia()
+        cell.imageView.image = self.image
         
         return cell
     }

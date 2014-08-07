@@ -60,8 +60,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    func didSelectPhoto(sender : AnyObject) {
+        // dictionary, if let
+        println("didSelectPhoto fired")
+//        self.photoSelected(asset)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let notificationCenter = NSNotificationCenter.defaultCenter()
+        notificationCenter.addObserver(self, selector: Selector("didSelectPhoto:"), name: "photoChangedNotification", object: nil)
+        
         
         // photo library observer
         PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
@@ -96,11 +106,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 (action : UIAlertAction!) -> Void in
                 println("self.view = \(self.view)\n")
                 self.dismissViewControllerAnimated(false, completion: nil)
-//                self.alertController.view.removeFromSuperview()
-//                self.dismissViewControllerAnimated(false, completion: {
-//                    () -> Void in
-//                    self.presentViewController(self.cameraPicker, animated: true, completion: nil)
-//                })
                 self.presentViewController(self.cameraPicker, animated: true, completion: nil)
             })
             alertController.addAction(actionCamera)
@@ -165,7 +170,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if let changeDetails = changeInstance.changeDetailsForObject(self.photoAsset) {
             if changeDetails.assetContentChanged {
                 if let updatedImage = changeDetails.objectAfterChanges as? PHAsset {
-                    self.photoSelected(self.photoAsset)
+//                    self.photoSelected(self.photoAsset)
                 }
             }
         }
@@ -310,8 +315,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                         
                         self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
                         self.imageView.transform = CGAffineTransformMakeScale(1.0, -1.0)
-                        self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-                        self.imageView.transform = CGAffineTransformMakeScale(1.0, 1.0)
+//                        self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+//                        self.imageView.transform = CGAffineTransformMakeScale(1.0, 1.0)
                         
                         }, completion: { (succes : Bool) -> Void in
                             println("animation done")

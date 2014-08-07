@@ -47,7 +47,8 @@ class PhotoViewController: UIViewController, FilterAppliedDelegate {
     }
     
     @IBAction func buttonPressedToEditPhoto(sender: AnyObject) {
-        self.delegate!.photoSelected(self.asset)
+//        self.delegate!.photoSelected(self.asset)
+        NSNotificationCenter.defaultCenter().postNotificationName("photoChangedNotification", object: nil, userInfo: nil)
         self.navigationController.popToRootViewControllerAnimated(true)
     }
 
