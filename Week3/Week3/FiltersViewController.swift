@@ -17,36 +17,51 @@ class FiltersViewController: UIViewController, UICollectionViewDataSource {
     
     @IBOutlet var collectionView: UICollectionView!
     
-    var photoAsset : PHAsset!
+    var filters = Filter()
+    
+    // passed in from segue
+    var asset : PHAsset!
     var image : UIImage!
-    var filters = Array<Filter>()
-    var filterDelegate : FilterAppliedDelegate!
+    
+    var thumbnailSize = CGSize(width: 50, height: 50)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView.dataSource = self
-        for var index = 0; index < availableFilters.count; index++ {
-            filters.append(Filter(photoAsset: photoAsset))
-        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
+    func setThumbnailImage(asset : PHAsset) {
+        self.asset = asset
+        
+        PHImageManager.defaultManager().requestImageForAsset(
+            asset,
+            targetSize: self.thumbnailSize,
+            contentMode: PHImageContentMode.AspectFill,
+            options: nil) { (image, info) -> Void in
+                self.image = image
+        }
+    }
+    
     // MARK: - UICollectionViewDataSource
     func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int {
         println("numberofItemsInSection")
-        return filters.count
+        return availableFilters.count
     }
     
     func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
-        println("cellForItemAtIndexPath")
+        println("cellForItemAtIndexPath \(indexPath.row) \(availableFilters[indexPath.row])")
         
         var cell = collectionView.dequeueReusableCellWithReuseIdentifier("FilterViewCell", forIndexPath: indexPath) as FilterViewCell
 
-//        var filteredImage = filters[indexPath.item].previewSepia()
-        cell.imageView.image = self.image
+        var filteredImage = filters.applyFilterToImage(availableFilters[indexPath.row], image: image)
+        NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
+            cell.imageView.image = filteredImage
+        }
+//        cell.imageView.image = self.image
         
         return cell
     }

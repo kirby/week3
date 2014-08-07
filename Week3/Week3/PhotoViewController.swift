@@ -62,7 +62,7 @@ class PhotoViewController: UIViewController, FilterAppliedDelegate {
         println("prepareForSegue to \(segue.identifier)")
         if segue.identifier == "ShowFilters" {
             let filtersVC = segue.destinationViewController as FiltersViewController
-            filtersVC.photoAsset = self.asset
+            filtersVC.setThumbnailImage(self.asset)
         }
     }
     /*

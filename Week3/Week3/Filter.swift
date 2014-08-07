@@ -9,93 +9,90 @@
 import Foundation
 import UIKit
 import Photos
+import CoreImage
 
-let availableFilters = [ "sepia", "kirby", "kody", "bizarro" ]
+let availableFilters = [ "Sepia Tone", "Vignette", "Photo Effect Noir", "Color Invert" ]
+let compressionQuality = CGFloat(0.8)
 
 class Filter {
-    
-    var photoAsset : PHAsset!
-    var filterName : String!
-    var beforeImage : UIImage!
-    var afterImage : UIImage!
-    
-    let compressionQuality = CGFloat(0.5)
-    let context = CIContext(options: nil)
-    let inputOptions = PHContentEditingInputRequestOptions()
-    
-    init(photoAsset : PHAsset) {
-        self.photoAsset = photoAsset
-        // prepare our app specific format identifier and version info
-        self.inputOptions.canHandleAdjustmentData = { (data : PHAdjustmentData!) -> Bool in
-            println("canHandleAdjustmentData \(data.formatIdentifier) \(data.formatVersion)")
-            return data.formatIdentifier == "com.kirby.filter" && data.formatVersion == "1.0"
-        }
-    }
-    
-    func getInputImageFromContentEditingInput(input : PHContentEditingInput) -> CIImage? {
-        // get a local copy of the image in CIImage
-        var url : NSURL!
-        if let urlTest = input.fullSizeImageURL {
-            url = urlTest
-        } else {
-            return nil
-        }
-        
-        var orientation = input.fullSizeImageOrientation
-        var inputImage = CIImage(contentsOfURL: url)
-        inputImage = inputImage.imageByApplyingOrientation(orientation)
-        
-        return inputImage
-    }
-    
-    func previewSepia() -> UIImage {
-        
-        photoAsset.requestContentEditingInputWithOptions(inputOptions, completionHandler: { (input : PHContentEditingInput!, info : [NSObject : AnyObject]!) -> Void in
 
-            if let inputImage = self.getInputImageFromContentEditingInput(input) {
-                // create filter
-                var filter = CIFilter(name: "CISepiaTone")
-                var intensity = 0.8
-                filter.setDefaults()
-                filter.setValue(inputImage, forKey: kCIInputImageKey)
-                filter.setValue(intensity, forKey:kCIInputIntensityKey)
-                
-                // apply filter and get output image CIImage, then CGImage, then UIImage
-                var ciImage = filter.outputImage
-                var cgImage = self.context.createCGImage(ciImage, fromRect: ciImage.extent())
-                
-                // get a jpeg copy of the image into memory
-                var image = UIImage(CGImage: cgImage)
-            }
-        })
+    let context = CIContext(options: nil)
+    
+//    var filters : Dictionary<String, (UIImage) -> (UIImage)>?
+//    init() {
+//        self.filters!["CISepiaTone"] = self.sepiaFilter
+//        self.filters!["CISepiaTone2"] = self.sepiaFilter
+//        self.filters!["CISepiaTone3"] = self.sepiaFilter
+//        self.filters!["CISepiaTone4"] = self.sepiaFilter
+////        var sepiaMethod = self.filters!["CISepiaTone"]
+////        sepiaMethod!()
+//    }
+    
+    func applyFilterToImage(filterNamed : String, image : UIImage) -> UIImage {
+        let context = CIContext(options: nil)
+
+        // create filter
+        println("apply filter named: \(filterNamed)")
         
-        return UIImage(named: "dirLa9Ri9") // testing
+        var ciImage = CIImage()
+        switch filterNamed {
+            case "Sepia Tone":
+                ciImage = self.sepiaFilter(image)
+            case "Vignette":
+                ciImage = self.vignetteFilter(image)
+            case "Photo Effect Noir":
+                ciImage = self.photoNoirFilter(image)
+            case "Color Invert":
+                ciImage = self.colorInvert(image)
+        default:
+            ciImage = self.sepiaFilter(image)
+        }
+        
+        var cgImage = context.createCGImage(ciImage, fromRect: ciImage.extent())
+        
+        return UIImage(CGImage: cgImage)
     }
     
-    func applySepia() {
-        photoAsset.requestContentEditingInputWithOptions(inputOptions, completionHandler: { (input : PHContentEditingInput!, info : [NSObject : AnyObject]!) -> Void in
- 
-            if let inputImage = self.getInputImageFromContentEditingInput(input) {
-                
-                // create filter
-                var filter = CIFilter(name: "CISepiaTone")
-                var intensity = 0.8
-                filter.setDefaults()
-                filter.setValue(inputImage, forKey: kCIInputImageKey)
-                filter.setValue(intensity, forKey:kCIInputIntensityKey)
-                
-                // apply filter and get output image CIImage, then CGImage, then UIImage
-                var ciImage = filter.outputImage
-                var cgImage = self.context.createCGImage(ciImage, fromRect: ciImage.extent())
-                
-                // get a jpeg copy of the image into memory
-                var uiImage = UIImage(CGImage: cgImage)
-//                var jpeg = UIImageJPEGRepresentation(uiImage, self.compressionQuality)
-//                
-//                var contentEditingOutput = PHContentEditingOutput(contentEditingInput: input)
-//                var outputURL = contentEditingOutput.renderedContentURL
-//                jpeg.writeToURL(outputURL, atomically: true)
-            }
-        })
+    func sepiaFilter(image : UIImage) -> CIImage {
+        var filter = CIFilter(name: "CISepiaTone")
+        
+        var intensity = 0.8
+        filter.setDefaults()
+        filter.setValue(CIImage(image: image), forKey: kCIInputImageKey)
+        filter.setValue(intensity, forKey:kCIInputIntensityKey)
+
+        return filter.outputImage
     }
+    
+    func vignetteFilter(image : UIImage) -> CIImage {
+        var filter = CIFilter(name: "CIVignette")
+        
+        var radius = NSNumber(double: 1.0)
+        var intensity = 0.0
+        filter.setDefaults()
+        filter.setValue(CIImage(image: image), forKey: kCIInputImageKey)
+        filter.setValue(radius, forKey: kCIInputRadiusKey)              // radius
+        filter.setValue(intensity, forKey: kCIInputIntensityKey)         // intensity
+        
+        return filter.outputImage
+    }
+    
+    func photoNoirFilter(image : UIImage) -> CIImage {
+        var filter = CIFilter(name: "CIPhotoEffectNoir")
+
+        filter.setDefaults()
+        filter.setValue(CIImage(image: image), forKey: kCIInputImageKey)
+        
+        return filter.outputImage
+    }
+    
+    func colorInvert(image : UIImage) -> CIImage {
+        var filter = CIFilter(name: "CIColorInvert")
+        
+        filter.setDefaults()
+        filter.setValue(CIImage(image: image), forKey: kCIInputImageKey)
+        
+        return filter.outputImage
+    }
+    
 }
