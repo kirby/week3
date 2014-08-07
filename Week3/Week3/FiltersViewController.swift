@@ -9,11 +9,7 @@
 import UIKit
 import Photos
 
-protocol FilterAppliedDelegate {
-    func filterAppledUpdatedImage(image : UIImage)
-}
-
-class FiltersViewController: UIViewController, UICollectionViewDataSource {
+class FiltersViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     @IBOutlet var collectionView: UICollectionView!
     
@@ -28,6 +24,7 @@ class FiltersViewController: UIViewController, UICollectionViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.collectionView.dataSource = self
+        self.collectionView.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -60,12 +57,16 @@ class FiltersViewController: UIViewController, UICollectionViewDataSource {
         var filteredImage = filters.applyFilterToImage(availableFilters[indexPath.row], image: image)
         NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
             cell.imageView.image = filteredImage
+            cell.filterLabel.text = availableFilters[indexPath.row]
         }
-//        cell.imageView.image = self.image
         
         return cell
     }
 
+    // MARK: - UICollectionViewDelegate
+    func collectionView(collectionView: UICollectionView!, didDeselectItemAtIndexPath indexPath: NSIndexPath!) {
+        println("selected \(indexPath.item) \(indexPath.row)")
+    }
 
     /*
     // MARK: - Navigation

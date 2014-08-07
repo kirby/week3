@@ -13,14 +13,13 @@ protocol PhotoSelectedDelegate {
     func photoSelected(asset : PHAsset)
 }
 
-class PhotoViewController: UIViewController, FilterAppliedDelegate {
+class PhotoViewController: UIViewController {
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var filterContainer: UIView!
     
     var asset : PHAsset!
     var delegate : PhotoSelectedDelegate?
-    var filterDelegate : FilterAppliedDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()

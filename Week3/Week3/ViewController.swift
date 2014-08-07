@@ -15,20 +15,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     let coreMotionManager = CMMotionManager()
     
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var filter1Button: UIButton!
-    @IBOutlet weak var sepiaSlider: UISlider!
-    @IBOutlet weak var sepaiLabel: UILabel!
     
     @IBAction func buttonPressedToSelectImage(sender: AnyObject) {
         self.presentViewController(alertController, animated: true, completion: nil)
-    }
-    
-    @IBAction func buttonPressedApplyFilter1(sender: AnyObject) {
-        applyFilter1()
-    }
-    
-    @IBAction func sliderValueChanged(sender: AnyObject) {
-        self.sepaiLabel.text = NSString(format: "%.01f", sepiaSlider.value)
     }
     
     var alertController = UIAlertController(title: "Photo Time", message: "Select a photo to edit", preferredStyle: UIAlertControllerStyle.ActionSheet)
@@ -45,18 +34,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.sepaiLabel.text = NSString(format: "%.01f", sepiaSlider.value)
         if self.photoAsset == nil {
             println("photoAsset is not set, let's check user defaults")
-            self.filter1Button.enabled = false
             // try to load from user defaults
             if let assetURL = userDefaults.URLForKey("assetURL") {
                 println("read asset from user defaults \(assetURL)")
                 var data = NSData.dataWithContentsOfURL(assetURL, options: nil, error: nil)
                 self.imageView.image = UIImage(data: data)
             }
-        } else {
-            self.filter1Button.enabled = true
         }
     }
     
@@ -230,8 +215,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 filter.setValue(inputImage, forKey: kCIInputImageKey)
                 
                 // get intensity value from the slider
-                var intensity = CGFloat(self.sepiaSlider.value)
-                println("\(intensity)")
+                var intensity = CGFloat(0.8)
                 
                 filter.setValue(intensity, forKey:kCIInputIntensityKey) // TODO: get this from a slider?
               
@@ -296,9 +280,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func photoSelected(asset: PHAsset) {
 
-        self.photoAsset = asset // save this for later use by the filter
-        self.filter1Button.enabled = true
-        
+        self.photoAsset = asset // save this for later use by the filter        
         let targetSize = self.imageView.frame.size  // should this be a constant up above?
         
         PHImageManager.defaultManager().requestImageForAsset(
