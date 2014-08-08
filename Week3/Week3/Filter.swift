@@ -32,7 +32,7 @@ class Filter {
         let context = CIContext(options: nil)
 
         // create filter
-//        println("apply filter named: \(filterNamed)")
+        println("apply filter named: \(filterNamed)")
         
         var ciImage = CIImage()
         switch filterNamed {

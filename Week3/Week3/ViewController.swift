@@ -10,7 +10,7 @@ import UIKit
 import Photos
 import CoreMotion
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, PhotoSelectedDelegate, PHPhotoLibraryChangeObserver {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, PHPhotoLibraryChangeObserver {
     
     let coreMotionManager = CMMotionManager()
     
@@ -27,6 +27,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var imagePicker = UIImagePickerController()
     var cameraPicker : UIImagePickerController? = nil
     
+    var filters = Filter()
     var context = CIContext(options: nil)
     var photoAsset : PHAsset!
     var image : UIImage!
@@ -128,7 +129,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let requestOptions = PHFetchOptions()
             let collectionVC = segue.destinationViewController as CollectionViewController
             collectionVC.photoAssets = PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Image, options: nil)
-            collectionVC.delegate = self
         }
     }
 
@@ -159,7 +159,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if let changeDetails = changeInstance.changeDetailsForObject(self.photoAsset) {
             if changeDetails.assetContentChanged {
                 if let updatedImage = changeDetails.objectAfterChanges as? PHAsset {
-//                    self.photoSelected(self.photoAsset)
                     self.updateImageView()
                 }
             }
@@ -187,9 +186,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         picker.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func applyFilterNamed(named : String) {
+    func applyFilterNamed(filterNamed : String) {
         if self.photoAsset != nil {
-            println("applyFilterNamed \(named)")
+            println("applyFilterNamed \(filterNamed)")
             self.activityIndicator.startAnimating()
             
             // prepare our app specific format identifier and version info
@@ -214,23 +213,45 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 var inputImage = CIImage(contentsOfURL: url)
                 inputImage = inputImage.imageByApplyingOrientation(orientation)
                 
-                // create filter
-                var filter = CIFilter(name: "CISepiaTone")
-                filter.setDefaults()
-                filter.setValue(inputImage, forKey: kCIInputImageKey)
+                var ciImage = CIImage()
+                switch filterNamed {
+                case "Sepia Tone":
+                    // create filter
+                    var filter = CIFilter(name: "CISepiaTone")
+                    filter.setDefaults()
+                    filter.setValue(inputImage, forKey: kCIInputImageKey)
+                    // get intensity value from the slider
+                    var intensity = CGFloat(0.8)
+                    filter.setValue(intensity, forKey:kCIInputIntensityKey)
+                    ciImage = filter.outputImage
+                case "Vignette":
+                    var filter = CIFilter(name: "CIVignette")
+                    var radius = NSNumber(double: 1.0)
+                    var intensity = 0.0
+                    filter.setDefaults()
+                    filter.setValue(inputImage, forKey: kCIInputImageKey)
+                    filter.setValue(radius, forKey: kCIInputRadiusKey)              // radius
+                    filter.setValue(intensity, forKey: kCIInputIntensityKey)         // intensity
+                    ciImage = filter.outputImage
+                case "Photo Effect Noir":
+                    var filter = CIFilter(name: "CIPhotoEffectNoir")
+                    filter.setDefaults()
+                    filter.setValue(inputImage, forKey: kCIInputImageKey)
+                    ciImage = filter.outputImage
+                case "Color Invert":
+                    var filter = CIFilter(name: "CIColorInvert")
+                    filter.setDefaults()
+                    filter.setValue(inputImage, forKey: kCIInputImageKey)
+                    ciImage = filter.outputImage
+                default:
+                    println("something wrong")
+                }
                 
-                // get intensity value from the slider
-                var intensity = CGFloat(0.8)
-                
-                filter.setValue(intensity, forKey:kCIInputIntensityKey) // TODO: get this from a slider?
-                
-                // apply filter and get output image CIImage, then CGImage, then UIImage
-                var ciImage = filter.outputImage
                 var cgImage = self.context.createCGImage(ciImage, fromRect: ciImage.extent())
                 
                 // get a jpeg copy of the image into memory
                 var uiImage = UIImage(CGImage: cgImage)
-                var jpeg = UIImageJPEGRepresentation(uiImage, 0.25)
+                var jpeg = UIImageJPEGRepresentation(uiImage, 0.7)
                 
                 var contentEditingOutput = PHContentEditingOutput(contentEditingInput: input)
                 var outputURL = contentEditingOutput.renderedContentURL
@@ -270,21 +291,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             targetSize: targetSize,
             contentMode: PHImageContentMode.AspectFill,
             options: nil) { (image, info) -> Void in
-                
                 NSOperationQueue.mainQueue().addOperationWithBlock({
-                    
                     self.imageView.image = image
-                    
-//                    UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
-//                        
-//                        self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-//                        self.imageView.transform = CGAffineTransformMakeScale(1.0, -1.0)
-//                        self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-//                        self.imageView.transform = CGAffineTransformMakeScale(1.0, 1.0)
-//                        
-//                        }, completion: { (succes : Bool) -> Void in
-//                            println("animation done")
-//                    })
                 })
         }
     }
@@ -296,48 +304,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         PHPhotoLibrary.sharedPhotoLibrary().performChanges({
             // Request creating an asset from the image.
             let createAssetRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(image)
-            
-//            // Request editing the album.
-//            let albumChangeRequest = PHAssetCollectionChangeRequest(forAssetCollection: album)
-//            
-//            // Get a placeholder for the new asset and add it to the album editing request.
-//            let assetPlaceholder = createAssetRequest.placeholderForCreatedAsset
-//            albumChangeRequest.addAssets([assetPlaceholder])
-            
             }, completionHandler: { success, error in
                 var message = success ? "photo saved!" : "photo not saved\n\(error)"
         })
-    }
-    
-    // MARK: PhotoSelectedDelegate
-    
-    func photoSelected(asset: PHAsset) {
-
-        self.photoAsset = asset // save this for later use by the filter        
-        let targetSize = self.imageView.frame.size  // should this be a constant up above?
-        
-        PHImageManager.defaultManager().requestImageForAsset(
-            asset,
-            targetSize: targetSize,
-            contentMode: PHImageContentMode.AspectFill,
-            options: nil) { (image, info) -> Void in
-            
-                NSOperationQueue.mainQueue().addOperationWithBlock({
-
-                    self.imageView.image = image
-                    
-                    UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
-                        
-                        self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-                        self.imageView.transform = CGAffineTransformMakeScale(1.0, -1.0)
-//                        self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-//                        self.imageView.transform = CGAffineTransformMakeScale(1.0, 1.0)
-                        
-                        }, completion: { (succes : Bool) -> Void in
-                            println("animation done")
-                    })
-                })
-        }
     }
 
 }
