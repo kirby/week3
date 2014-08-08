@@ -53,10 +53,12 @@ class FiltersViewController: UIViewController, UICollectionViewDataSource, UICol
     }
     
     func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
-//        println("cellForItemAtIndexPath \(indexPath.row) \(availableFilters[indexPath.item])")
+        println("cellForItemAtIndexPath \(indexPath.row) \(availableFilters[indexPath.item])")
         
         var cell = collectionView.dequeueReusableCellWithReuseIdentifier("FilterViewCell", forIndexPath: indexPath) as FilterViewCell
 
+        println("cell = \(cell)")
+        
         var filteredImage = filters.applyFilterToImage(availableFilters[indexPath.item], image: image)
         NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
             cell.imageView.image = filteredImage

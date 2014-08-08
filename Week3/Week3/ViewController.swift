@@ -53,9 +53,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.photoAsset = notification.userInfo["asset"] as PHAsset
         var filter = notification.userInfo["filter"] as NSString
         self.applyFilterNamed(filter)
-//        println("filter = \(filter)")
-//        println("photoAsset = \(self.photoAsset)")
-        
     }
     
     override func viewDidLoad() {
@@ -128,7 +125,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
             let requestOptions = PHFetchOptions()
             let collectionVC = segue.destinationViewController as CollectionViewController
-            collectionVC.photoAssets = PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Image, options: nil)
+            
+            let fetchOptions = PHFetchOptions()
+            
+            let albumTitle = "MyApp"
+            let resultPredicate = NSPredicate(format: "title = %@", albumTitle)
+            fetchOptions.predicate = resultPredicate
+            
+            
+            let fetchResult = PHAssetCollection.fetchAssetCollectionsWithType(.Album, subtype: .AlbumRegular, options: fetchOptions)
+            
+            println("Photo Album \(albumTitle) has \(fetchResult.count) items")
+            var collection = fetchResult.firstObject as? PHAssetCollection
+            var assets = PHAsset.fetchAssetsInAssetCollection(collection, options: nil)
+//            println("collection = \(collection)")
+//            collectionVC.photoAssets = PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Image, options: nil)
+            
+            collectionVC.photoAssets = assets
+
         }
     }
 
@@ -159,7 +173,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if let changeDetails = changeInstance.changeDetailsForObject(self.photoAsset) {
             if changeDetails.assetContentChanged {
                 if let updatedImage = changeDetails.objectAfterChanges as? PHAsset {
+                    self.photoAsset = updatedImage
                     self.updateImageView()
+
+                    println("\(changeDetails)")
+                    var afterChanges = changeDetails.objectAfterChanges as? PHAsset
+                    println("\(afterChanges))")
+                    //self.userDefaults.setURL(???, forKey: "assetURL")
                 }
             }
         }
@@ -206,8 +226,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 } else {
                     return
                 }
-                println("setting URL in user defaults \(url)")
-                self.userDefaults.setURL(url, forKey: "assetURL")
                 
                 var orientation = input.fullSizeImageOrientation
                 var inputImage = CIImage(contentsOfURL: url)
@@ -258,7 +276,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 jpeg.writeToURL(outputURL, atomically: true)
                 
                 // create adjustment data for the edit
-                var adjustmentData = PHAdjustmentData(formatIdentifier: "com.kirby.filter", formatVersion: "1.0", data: jpeg)
+//                var adjustmentData = PHAdjustmentData(formatIdentifier: "com.kirby.filter", formatVersion: "1.0", data: jpeg)
+                
+                var filterInfo = NSDictionary(object: filterNamed, forKey: "filter")
+                var info = NSKeyedArchiver.archivedDataWithRootObject(filterInfo)
+                
+                var adjustmentData = PHAdjustmentData(formatIdentifier: "com.kirby.filter", formatVersion: "1.0", data: info)
+                
                 contentEditingOutput.adjustmentData = adjustmentData
                 
                 // write a version of the image to the photo library
@@ -277,6 +301,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                         NSOperationQueue.mainQueue().addOperationWithBlock({
                             self.applyingFilter = false
                             self.activityIndicator.stopAnimating()
+                            // NOTE: At this point the new contentEditingOutput.renderedContentURL value is for a tmp file, not the original, we need to wait until we get the library changed message
                         })
                 })
             })

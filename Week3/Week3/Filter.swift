@@ -29,6 +29,7 @@ class Filter {
 //    }
     
     func applyFilterToImage(filterNamed : String, image : UIImage) -> UIImage {
+        println("apply \(filterNamed) filter")
         let context = CIContext(options: nil)
 
         // create filter
