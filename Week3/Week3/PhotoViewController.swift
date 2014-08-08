@@ -58,9 +58,10 @@ class PhotoViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
-        println("prepareForSegue to \(segue.identifier)")
+//        println("prepareForSegue to \(segue.identifier)")
         if segue.identifier == "ShowFilters" {
             let filtersVC = segue.destinationViewController as FiltersViewController
+            filtersVC.asset = self.asset
             filtersVC.setThumbnailImage(self.asset)
         }
     }

@@ -49,19 +49,18 @@ class FiltersViewController: UIViewController, UICollectionViewDataSource, UICol
     
     // MARK: - UICollectionViewDataSource
     func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int {
-        println("numberofItemsInSection")
         return availableFilters.count
     }
     
     func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell! {
-        println("cellForItemAtIndexPath \(indexPath.row) \(availableFilters[indexPath.row])")
+//        println("cellForItemAtIndexPath \(indexPath.row) \(availableFilters[indexPath.item])")
         
         var cell = collectionView.dequeueReusableCellWithReuseIdentifier("FilterViewCell", forIndexPath: indexPath) as FilterViewCell
 
-        var filteredImage = filters.applyFilterToImage(availableFilters[indexPath.row], image: image)
+        var filteredImage = filters.applyFilterToImage(availableFilters[indexPath.item], image: image)
         NSOperationQueue.mainQueue().addOperationWithBlock { () -> Void in
             cell.imageView.image = filteredImage
-            cell.filterLabel.text = availableFilters[indexPath.row]
+            cell.filterLabel.text = availableFilters[indexPath.item]
         }
         
         return cell
@@ -69,7 +68,13 @@ class FiltersViewController: UIViewController, UICollectionViewDataSource, UICol
 
     // MARK: - UICollectionViewDelegate
     func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!) {
-        println("\(indexPath.item)")
+        var keys = ["filter", "asset"]        
+        var values = [NSString(string: availableFilters[indexPath.item]), self.asset]
+        var userInfo = NSDictionary(objects: values, forKeys: keys)
+        
+        NSNotificationCenter.defaultCenter().postNotificationName("filterSelectedOnPhotoAsset", object: nil, userInfo: userInfo)
+        
+        self.navigationController.popToRootViewControllerAnimated(true)
     }
 
     /*

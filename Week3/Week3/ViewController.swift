@@ -31,9 +31,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var photoAsset : PHAsset!
     var image : UIImage!
     let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+    var applyingFilter = false
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        if applyingFilter { return }
         if self.photoAsset == nil {
             println("photoAsset is not set, let's check user defaults")
             // try to load from user defaults
@@ -45,18 +47,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    func didSelectPhoto(sender : AnyObject) {
-        // dictionary, if let
-        println("didSelectPhoto fired")
-//        self.photoSelected(asset)
+    func filterSelected(notification : NSNotification) {
+        self.applyingFilter = true
+        self.photoAsset = notification.userInfo["asset"] as PHAsset
+        var filter = notification.userInfo["filter"] as NSString
+        self.applyFilterNamed(filter)
+//        println("filter = \(filter)")
+//        println("photoAsset = \(self.photoAsset)")
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let notificationCenter = NSNotificationCenter.defaultCenter()
-        notificationCenter.addObserver(self, selector: Selector("didSelectPhoto:"), name: "photoChangedNotification", object: nil)
-        
+        notificationCenter.addObserver(self, selector: Selector("filterSelected:"), name: "filterSelectedOnPhotoAsset", object: nil)
         
         // photo library observer
         PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
@@ -75,7 +80,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         var actionSavedPhotosAlbum = UIAlertAction(title: "Photo Album", style: UIAlertActionStyle.Default, handler: {
             (action : UIAlertAction!) in
-//            self.presentViewController(self.imagePicker, animated: true, completion: nil)
                 self.performSegueWithIdentifier("ShowPhotoCollection", sender: self)
         })
         alertController.addAction(actionSavedPhotosAlbum)
@@ -130,7 +134,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        println("didReceiveMemoryWarning")
     }
     
     func presentCameraPicker() {
@@ -156,6 +160,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             if changeDetails.assetContentChanged {
                 if let updatedImage = changeDetails.objectAfterChanges as? PHAsset {
 //                    self.photoSelected(self.photoAsset)
+                    self.updateImageView()
                 }
             }
         }
@@ -182,9 +187,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         picker.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func applyFilter1() {
+    func applyFilterNamed(named : String) {
         if self.photoAsset != nil {
-            println("applyFilter1")
+            println("applyFilterNamed \(named)")
             self.activityIndicator.startAnimating()
             
             // prepare our app specific format identifier and version info
@@ -218,7 +223,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 var intensity = CGFloat(0.8)
                 
                 filter.setValue(intensity, forKey:kCIInputIntensityKey) // TODO: get this from a slider?
-              
+                
                 // apply filter and get output image CIImage, then CGImage, then UIImage
                 var ciImage = filter.outputImage
                 var cgImage = self.context.createCGImage(ciImage, fromRect: ciImage.extent())
@@ -249,10 +254,38 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                             println("\(error)")
                         }
                         NSOperationQueue.mainQueue().addOperationWithBlock({
+                            self.applyingFilter = false
                             self.activityIndicator.stopAnimating()
                         })
                 })
             })
+        }
+    }
+    
+    func updateImageView() {
+        let targetSize = self.imageView.frame.size  // should this be a constant up above?
+        
+        PHImageManager.defaultManager().requestImageForAsset(
+            self.photoAsset,
+            targetSize: targetSize,
+            contentMode: PHImageContentMode.AspectFill,
+            options: nil) { (image, info) -> Void in
+                
+                NSOperationQueue.mainQueue().addOperationWithBlock({
+                    
+                    self.imageView.image = image
+                    
+//                    UIView.animateWithDuration(0.4, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+//                        
+//                        self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+//                        self.imageView.transform = CGAffineTransformMakeScale(1.0, -1.0)
+//                        self.imageView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+//                        self.imageView.transform = CGAffineTransformMakeScale(1.0, 1.0)
+//                        
+//                        }, completion: { (succes : Bool) -> Void in
+//                            println("animation done")
+//                    })
+                })
         }
     }
     
