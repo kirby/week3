@@ -45,7 +45,7 @@ class Filter {
             case "Color Invert":
                 ciImage = self.colorInvert(image)
         default:
-            ciImage = self.sepiaFilter(image)
+            println("something wrong")
         }
         
         var cgImage = context.createCGImage(ciImage, fromRect: ciImage.extent())

@@ -13,16 +13,20 @@ class FiltersViewController: UIViewController, UICollectionViewDataSource, UICol
     
     @IBOutlet var collectionView: UICollectionView!
     
+    @IBAction func handlePanGesture(sender: AnyObject) {
+        println("handlePanGesture")
+    }
     var filters = Filter()
     
     // passed in from segue
     var asset : PHAsset!
     var image : UIImage!
     
-    var thumbnailSize = CGSize(width: 50, height: 50)
+    var thumbnailSize = CGSize(width: 100, height: 100)
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
     }
@@ -64,8 +68,8 @@ class FiltersViewController: UIViewController, UICollectionViewDataSource, UICol
     }
 
     // MARK: - UICollectionViewDelegate
-    func collectionView(collectionView: UICollectionView!, didDeselectItemAtIndexPath indexPath: NSIndexPath!) {
-        println("selected \(indexPath.item) \(indexPath.row)")
+    func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!) {
+        println("\(indexPath.item)")
     }
 
     /*
