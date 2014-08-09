@@ -138,15 +138,6 @@
                                     <constraint firstAttribute="width" constant="250" id="eZo-3Q-W1C"/>
                                 </constraints>
                             </imageView>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a1b-Zo-CCH">
-                                <rect key="frame" x="250" y="550" width="100" height="30"/>
-                                <state key="normal" title="Edit this photo">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="buttonPressedToEditPhoto:" destination="pwR-NQ-gBc" eventType="touchUpInside" id="edw-e7-eW1"/>
-                                </connections>
-                            </button>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zxy-VI-t80">
                                 <rect key="frame" x="175" y="330" width="250" height="140"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -162,8 +153,6 @@
                         <color key="backgroundColor" red="0.20000000298023224" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="Ppe-Ri-gy5" secondAttribute="centerX" id="Dug-xL-WUQ"/>
-                            <constraint firstAttribute="centerX" secondItem="a1b-Zo-CCH" secondAttribute="centerX" id="Q72-yS-CbH"/>
-                            <constraint firstItem="kqg-Iw-DmK" firstAttribute="top" secondItem="a1b-Zo-CCH" secondAttribute="bottom" constant="20" id="U8P-AR-dLb"/>
                             <constraint firstItem="Zxy-VI-t80" firstAttribute="top" secondItem="Ppe-Ri-gy5" secondAttribute="bottom" constant="8" symbolic="YES" id="Yrk-ZJ-CJ9"/>
                             <constraint firstItem="Ppe-Ri-gy5" firstAttribute="top" secondItem="oyR-3r-qKL" secondAttribute="bottom" constant="8" symbolic="YES" id="rjx-GP-TOE"/>
                             <constraint firstAttribute="centerX" secondItem="Zxy-VI-t80" secondAttribute="centerX" id="vMN-Wo-OOC"/>

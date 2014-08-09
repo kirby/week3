@@ -28,6 +28,10 @@ class Filter {
 ////        sepiaMethod!()
 //    }
     
+    var filters = [
+        "CISepiaTone" : [ "kCIInputIntensityKey" : 0.8 ]
+    ]
+    
     func applyFilterToImage(filterNamed : String, image : UIImage) -> UIImage {
         println("apply \(filterNamed) filter")
         let context = CIContext(options: nil)

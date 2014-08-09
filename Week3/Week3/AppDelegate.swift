@@ -15,6 +15,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication!, didFinishLaunchingWithOptions launchOptions: NSDictionary!) -> Bool {
         // Override point for customization after application launch.
+        
+        // TODO: If this is the first time running the app ask for permission to the photo library and camera up front
+        // ------+--------------------------------------------
+        // key   | value
+        // ------+--------------------------------------------
+        // count | increment by one each time the app launches
+        var userDefaults = NSUserDefaults.standardUserDefaults()
+        var count = userDefaults.integerForKey("count")
+        userDefaults.setInteger(++count, forKey: "count")
+        
         return true
     }
 

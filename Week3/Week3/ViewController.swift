@@ -8,11 +8,8 @@
 
 import UIKit
 import Photos
-import CoreMotion
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, PHPhotoLibraryChangeObserver {
-    
-    let coreMotionManager = CMMotionManager()
     
     @IBOutlet weak var imageView: UIImageView!
     
@@ -20,10 +17,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
-    var alertController = UIAlertController(title: "Photo Time", message: "Select a photo to edit", preferredStyle: UIAlertControllerStyle.ActionSheet)
-    
     var userDefaults = NSUserDefaults.standardUserDefaults()
+    var authorized = false
     
+    var alertController : UIAlertController!
     var imagePicker = UIImagePickerController()
     var cameraPicker : UIImagePickerController? = nil
     
@@ -31,11 +28,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var context = CIContext(options: nil)
     var photoAsset : PHAsset!
     var image : UIImage!
-    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+    var activityIndicator : UIActivityIndicatorView!
     var applyingFilter = false
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        checkPhotoLibraryAuthorization()
+        setupNSNotificationCenter()
+        setupPhotoLibraryChangeObserver()
+        setupActivityIndicator()
+        setupPhotoPickerController()
+        setupCameraPickerController()
+        self.alertController = setupAlertController()
+    }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        var count = userDefaults.integerForKey("count")
+        println("count = \(count)")
         if applyingFilter { return }
         if self.photoAsset == nil {
             println("photoAsset is not set, let's check user defaults")
@@ -48,6 +58,104 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    /// -----------------------------------------------------------------------------------------------
+    
+    func checkPhotoLibraryAuthorization() {
+        self.authorized = authorizedForPhotoLibrary()
+        if !self.authorized {
+            println("Not authorized to use the photo library -- display something, we need access")
+        }
+    }
+    
+    func setupNSNotificationCenter() {
+        let notificationCenter = NSNotificationCenter.defaultCenter()
+        notificationCenter.addObserver(
+            self,
+            selector: Selector("filterSelected:"),
+            name: "filterSelectedOnPhotoAsset",
+            object: nil)
+    }
+    
+    func setupPhotoLibraryChangeObserver() {
+        PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
+    }
+    
+    func setupActivityIndicator() {
+        self.activityIndicator = UIActivityIndicatorView(
+            activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+
+        self.activityIndicator.center =
+            CGPoint(
+                x: self.imageView.frame.width / 2,
+                y: self.imageView.frame.height / 2)
+        self.imageView.addSubview(activityIndicator)
+    }
+    
+    func setupPhotoPickerController() {
+        self.imagePicker = UIImagePickerController()
+        self.imagePicker.allowsEditing = true
+        self.imagePicker.delegate = self
+        self.imagePicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
+    }
+    
+    func setupCameraPickerController() {
+        if isCameraAvailable() && authorizedForAV() {
+            self.cameraPicker = UIImagePickerController()
+            self.cameraPicker!.allowsEditing = true
+            self.cameraPicker!.delegate = self
+            self.cameraPicker!.sourceType = UIImagePickerControllerSourceType.Camera
+        }
+    }
+    
+    func setupAlertController() -> UIAlertController {
+        
+        var alertController = UIAlertController(
+            title: "Photo Time",
+            message: "Select a photo to edit",
+            preferredStyle: UIAlertControllerStyle.ActionSheet)
+        
+        alertController.addAction(setupSavedPhotosAlbumAction())
+        
+        if isCameraAvailable() {
+            alertController.addAction(setupCameraAction())
+        }
+        
+        alertController.addAction(setupCancelAction())
+        
+        return alertController
+    }
+
+    func setupSavedPhotosAlbumAction() -> UIAlertAction {
+        var action = UIAlertAction(
+            title: "Photo Album",
+            style: UIAlertActionStyle.Default,
+            handler: {
+                (action : UIAlertAction!) in
+                self.performSegueWithIdentifier("ShowPhotoCollection", sender: self)
+            })
+        return action
+    }
+
+    func setupCameraAction() -> UIAlertAction {
+        var action = UIAlertAction(
+            title: "Camera",
+            style: UIAlertActionStyle.Default,
+            handler: {
+                (action : UIAlertAction!) -> Void in
+                println("self.view = \(self.view)\n")
+                self.dismissViewControllerAnimated(false, completion: nil)
+                self.presentViewController(self.cameraPicker, animated: true, completion: nil)
+            })
+        return action
+    }
+
+    func setupCancelAction() -> UIAlertAction {
+        return (UIAlertAction(
+            title: "Cancel",
+            style: UIAlertActionStyle.Cancel,
+            handler: nil))
+    }
+    
     func filterSelected(notification : NSNotification) {
         self.applyingFilter = true
         self.photoAsset = notification.userInfo["asset"] as PHAsset
@@ -55,94 +163,31 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.applyFilterNamed(filter)
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let notificationCenter = NSNotificationCenter.defaultCenter()
-        notificationCenter.addObserver(self, selector: Selector("filterSelected:"), name: "filterSelectedOnPhotoAsset", object: nil)
-        
-        // photo library observer
-        PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
-        
-        // activity indicator - position
-        self.activityIndicator.center = CGPoint(x: self.imageView.frame.width / 2, y: self.imageView.frame.height / 2)
-        self.imageView.addSubview(activityIndicator)
-        
-//        playTest()
-        
-        // add Saved Photos Album image picker
-        self.imagePicker = UIImagePickerController()
-        self.imagePicker.allowsEditing = true
-        self.imagePicker.delegate = self
-        self.imagePicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
-        
-        var actionSavedPhotosAlbum = UIAlertAction(title: "Photo Album", style: UIAlertActionStyle.Default, handler: {
-            (action : UIAlertAction!) in
-                self.performSegueWithIdentifier("ShowPhotoCollection", sender: self)
-        })
-        alertController.addAction(actionSavedPhotosAlbum)
-        
-        // if available add Camera picker
-        if (UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)) {
-            
-            self.cameraPicker = UIImagePickerController()
-            self.cameraPicker!.allowsEditing = true
-            self.cameraPicker!.delegate = self
-            self.cameraPicker!.sourceType = UIImagePickerControllerSourceType.Camera
-            var actionCamera = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default, handler: {
-                (action : UIAlertAction!) -> Void in
-                println("self.view = \(self.view)\n")
-                self.dismissViewControllerAnimated(false, completion: nil)
-                self.presentViewController(self.cameraPicker, animated: true, completion: nil)
-            })
-            alertController.addAction(actionCamera)
-        }
-        
-        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
-    }
-    
-    func playTest() {
-        coreMotionManager.startDeviceMotionUpdates()
-        coreMotionManager.deviceMotionUpdateInterval = 0.01
-        println("deviceMotionActive = \(coreMotionManager.deviceMotionActive)")
-        
-        var timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("motionInfo"), userInfo: nil, repeats: true)
-
-        coreMotionManager.stopDeviceMotionUpdates()
-    }
-    
-    func motionInfo() {
-        println("motionInfo")
-        if let motion = coreMotionManager.deviceMotion {
-            println("motion = \(motion)")
-        }
-    }
-    
+    // MARK: - UI
     override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
-        if segue.identifier == "ShowPhotoCollection" {
-
-            PHPhotoLibrary.authorizationStatus()
+        if authorizedForPhotoLibrary() && segue.identifier == "ShowPhotoCollection" {
             
             let requestOptions = PHFetchOptions()
             let collectionVC = segue.destinationViewController as CollectionViewController
             
-            let fetchOptions = PHFetchOptions()
+            if (false) {
+                let fetchOptions = PHFetchOptions()
+                
+                let albumTitle = "MyApp"
+                let resultPredicate = NSPredicate(format: "title = %@", albumTitle)
+                fetchOptions.predicate = resultPredicate
+                
+                
+                let fetchResult = PHAssetCollection.fetchAssetCollectionsWithType(.Album, subtype: .AlbumRegular, options: fetchOptions)
+                
+                println("Photo Album \(albumTitle) has \(fetchResult.count) items")
+                var collection = fetchResult.firstObject as? PHAssetCollection
+                var assets = PHAsset.fetchAssetsInAssetCollection(collection, options: nil)
+                collectionVC.photoAssets = assets
+                println("collection = \(collection)")
+            } // hidden for now
             
-            let albumTitle = "MyApp"
-            let resultPredicate = NSPredicate(format: "title = %@", albumTitle)
-            fetchOptions.predicate = resultPredicate
-            
-            
-            let fetchResult = PHAssetCollection.fetchAssetCollectionsWithType(.Album, subtype: .AlbumRegular, options: fetchOptions)
-            
-            println("Photo Album \(albumTitle) has \(fetchResult.count) items")
-            var collection = fetchResult.firstObject as? PHAssetCollection
-            var assets = PHAsset.fetchAssetsInAssetCollection(collection, options: nil)
-//            println("collection = \(collection)")
-//            collectionVC.photoAssets = PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Image, options: nil)
-            
-            collectionVC.photoAssets = assets
-
+            collectionVC.photoAssets = PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Image, options: nil)
         }
     }
 
@@ -169,13 +214,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             return
         }
         
-        // no change
+        // did our photo asset change?
         if let changeDetails = changeInstance.changeDetailsForObject(self.photoAsset) {
             if changeDetails.assetContentChanged {
                 if let updatedImage = changeDetails.objectAfterChanges as? PHAsset {
                     self.photoAsset = updatedImage
                     self.updateImageView()
-
                     println("\(changeDetails)")
                     var afterChanges = changeDetails.objectAfterChanges as? PHAsset
                     println("\(afterChanges))")

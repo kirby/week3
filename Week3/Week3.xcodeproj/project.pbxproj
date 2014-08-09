@@ -13,6 +13,7 @@
 		4E6E32F8199154A90087FA72 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6E32F7199154A90087FA72 /* CollectionViewController.swift */; };
 		4E6E32FC1991680F0087FA72 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6E32FB1991680F0087FA72 /* PhotoCell.swift */; };
 		4E6E32FE1991887A0087FA72 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6E32FD1991887A0087FA72 /* PhotoViewController.swift */; };
+		4E79CCE21995E14300F992A4 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E79CCE11995E14300F992A4 /* HelperFunctions.swift */; };
 		4E93DB1219901393002B7CA7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E93DB1119901393002B7CA7 /* AppDelegate.swift */; };
 		4E93DB1419901393002B7CA7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E93DB1319901393002B7CA7 /* ViewController.swift */; };
 		4E93DB1719901393002B7CA7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4E93DB1519901393002B7CA7 /* Main.storyboard */; };
@@ -38,6 +39,7 @@
 		4E6E32F7199154A90087FA72 /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		4E6E32FB1991680F0087FA72 /* PhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		4E6E32FD1991887A0087FA72 /* PhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
+		4E79CCE11995E14300F992A4 /* HelperFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
 		4E93DB0C19901393002B7CA7 /* Week3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Week3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E93DB1019901393002B7CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4E93DB1119901393002B7CA7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -68,6 +70,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E79CCE01995E12D00F992A4 /* Functions */ = {
+			isa = PBXGroup;
+			children = (
+				4E79CCE11995E14300F992A4 /* HelperFunctions.swift */,
+			);
+			name = Functions;
+			sourceTree = "<group>";
+		};
 		4E93DB0319901392002B7CA7 = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +99,7 @@
 		4E93DB0E19901393002B7CA7 /* Week3 */ = {
 			isa = PBXGroup;
 			children = (
+				4E79CCE01995E12D00F992A4 /* Functions */,
 				4E9A1EF719932D0F00E97B60 /* Model */,
 				4E9A1EF819932D1E00E97B60 /* View */,
 				4E9A1EF919932D3500E97B60 /* Controller */,
@@ -258,6 +269,7 @@
 				4E1D5EA4199339160026F73F /* FiltersViewController.swift in Sources */,
 				4E1D5EA819933AF70026F73F /* FilterViewCell.swift in Sources */,
 				4E6E32FC1991680F0087FA72 /* PhotoCell.swift in Sources */,
+				4E79CCE21995E14300F992A4 /* HelperFunctions.swift in Sources */,
 				4E1D5EA6199339410026F73F /* FilterView.swift in Sources */,
 				4E93DB1419901393002B7CA7 /* ViewController.swift in Sources */,
 				4E93DB1219901393002B7CA7 /* AppDelegate.swift in Sources */,
