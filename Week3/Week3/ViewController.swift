@@ -18,7 +18,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     var userDefaults = NSUserDefaults.standardUserDefaults()
-    var authorized = false
+    var authorizedPhotoLibrary = authorizedForPhotoLibrary()
+    var authorizedCamera = authorizedForCamera()
+    
+    var displayWelcomeBanner = false
     
     var alertController : UIAlertController!
     var imagePicker = UIImagePickerController()
@@ -31,11 +34,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var activityIndicator : UIActivityIndicatorView!
     var applyingFilter = false
     
+    /// -----------------------------------------------------------------------------------------------
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         checkPhotoLibraryAuthorization()
+        checkCameraAuthorication()
         setupNSNotificationCenter()
-        setupPhotoLibraryChangeObserver()
+        registerPhotoLibraryChangeObserver()
         setupActivityIndicator()
         setupPhotoPickerController()
         setupCameraPickerController()
@@ -44,8 +50,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        var count = userDefaults.integerForKey("count")
-        println("count = \(count)")
+
+        checkToDisplayFirstTimeBanner()
+        
         if applyingFilter { return }
         if self.photoAsset == nil {
             println("photoAsset is not set, let's check user defaults")
@@ -61,24 +68,73 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     /// -----------------------------------------------------------------------------------------------
     
     func checkPhotoLibraryAuthorization() {
-        self.authorized = authorizedForPhotoLibrary()
-        if !self.authorized {
+        self.authorizedPhotoLibrary = authorizedForPhotoLibrary()
+        if !self.authorizedPhotoLibrary {
             println("Not authorized to use the photo library -- display something, we need access")
         }
     }
     
+    func checkCameraAuthorication() {
+        self.authorizedCamera = authorizedForCamera()
+        if !self.authorizedCamera {
+            println("Not authorized to use the camera -- display something, we need access")
+        }
+    }
+    
+    /// -----------------------------------------------------------------------------------------------
+    
     func setupNSNotificationCenter() {
         let notificationCenter = NSNotificationCenter.defaultCenter()
+        
         notificationCenter.addObserver(
             self,
             selector: Selector("filterSelected:"),
             name: "filterSelectedOnPhotoAsset",
             object: nil)
+        
+        notificationCenter.addObserver(
+            self,
+            selector: Selector("sleep:"),
+            name: "sleep",
+            object: nil)
+        
+        notificationCenter.addObserver(
+            self,
+            selector: Selector("wakeup:"),
+            name: "wakeup",
+            object: nil)
     }
     
-    func setupPhotoLibraryChangeObserver() {
+    func filterSelected(notification : NSNotification) {
+        self.applyingFilter = true
+        self.photoAsset = notification.userInfo["asset"] as PHAsset
+        var filter = notification.userInfo["filter"] as NSString
+        self.applyFilterNamed(filter)
+    }
+    
+    func sleep(notification : NSNotification) {
+        println("sleep")
+        unregisterPhotoLibraryChangeObserver()
+    }
+    
+    func wakeup(notification : NSNotification) {
+        println("wakeup")
+        registerPhotoLibraryChangeObserver()
+    }
+    
+    /// -----------------------------------------------------------------------------------------------
+    
+    func registerPhotoLibraryChangeObserver() {
+        println("register")
         PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
     }
+    
+    func unregisterPhotoLibraryChangeObserver() {
+        println("unregister")
+        PHPhotoLibrary.sharedPhotoLibrary().unregisterChangeObserver(self)
+    }
+    
+    /// -----------------------------------------------------------------------------------------------
     
     func setupActivityIndicator() {
         self.activityIndicator = UIActivityIndicatorView(
@@ -99,7 +155,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func setupCameraPickerController() {
-        if isCameraAvailable() && authorizedForAV() {
+        if isCameraAvailable() && authorizedForCamera() {
             self.cameraPicker = UIImagePickerController()
             self.cameraPicker!.allowsEditing = true
             self.cameraPicker!.delegate = self
@@ -156,12 +212,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             handler: nil))
     }
     
-    func filterSelected(notification : NSNotification) {
-        self.applyingFilter = true
-        self.photoAsset = notification.userInfo["asset"] as PHAsset
-        var filter = notification.userInfo["filter"] as NSString
-        self.applyFilterNamed(filter)
+    func checkToDisplayFirstTimeBanner() {
+        if displayFirstTimeBanner {
+            println("TODO display first time banner")
+        }
     }
+    
+    /// -----------------------------------------------------------------------------------------------
     
     // MARK: - UI
     override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {

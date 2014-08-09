@@ -10,7 +10,6 @@ import Photos
 
 func authorizedForPhotoLibrary() -> Bool {
     var photoLibraryAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
-    println("\(photoLibraryAuthorizationStatus)")
     
     switch photoLibraryAuthorizationStatus {
     case .Authorized:
@@ -22,9 +21,12 @@ func authorizedForPhotoLibrary() -> Bool {
     }
 }
 
-func authorizedForAV() -> Bool {
+func authorizedForCamera() -> Bool {
     var audioVideoAuthorizationStatus = AVCaptureDevice.authorizationStatusForMediaType(AVMediaTypeVideo)
+
     switch audioVideoAuthorizationStatus {
+    case .Authorized:
+        return true
     default:
         // TODO - request authorization or display helper
         println("Not Authorized for Camera device")
