@@ -57,4 +57,12 @@ class WelcomePageViewController: UIPageViewController, UIPageViewControllerDataS
         var index = (viewController as WelcomeViewController).index
         return self.viewControllerAtIndex(index - 1)
     }
+    
+    func presentationCountForPageViewController(pageViewController: UIPageViewController!) -> Int {
+        return self.screenText.count
+    }
+    
+    func presentationIndexForPageViewController(pageViewController: UIPageViewController!) -> Int {
+        return self.index
+    }
 }

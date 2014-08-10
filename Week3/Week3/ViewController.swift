@@ -72,7 +72,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     /// -----------------------------------------------------------------------------------------------
     
     func setupPageViewController() -> WelcomePageViewController {
-//        let vc = self.storyboard.instantiateViewControllerWithIdentifier("WelcomePageController") as WelcomePageViewController
         let welcomeStoryBoard = UIStoryboard(name: "Welcome", bundle: NSBundle.mainBundle())
         return welcomeStoryBoard.instantiateViewControllerWithIdentifier("WelcomePageController") as WelcomePageViewController
     }
@@ -225,11 +224,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func checkToDisplayFirstTimeBanner() {
-        self.presentViewController(self.pageViewController, animated: true, completion: nil)
         
+//        self.view.window?.rootViewController.presentViewController(self.pageViewController, animated: true, completion: nil)
+
         if displayFirstTimeBanner {
             println("TODO display first time banner")
-            self.performSegueWithIdentifier("ShowWelcome", sender: self)
+            displayFirstTimeBanner = false
+            self.presentViewController(self.pageViewController, animated: true, completion: nil)
         }
     }
     

@@ -20,4 +20,7 @@ class WelcomeViewController: UIViewController {
         self.welcomeLabel.text = self.screenText
     }
 
+    @IBAction func dismissWelcome(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
 }

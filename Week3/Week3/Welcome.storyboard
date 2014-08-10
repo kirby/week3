@@ -34,12 +34,24 @@
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sNn-GJ-Jir">
+                                <rect key="frame" x="277" y="550" width="46" height="30"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Got it!">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="dismissWelcome:" destination="TEE-Tc-HgF" eventType="touchUpInside" id="0N2-Rg-jL4"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="yLS-4B-Cjw" secondAttribute="centerX" id="4OZ-dK-GEG"/>
                             <constraint firstItem="yLS-4B-Cjw" firstAttribute="top" secondItem="lNA-UT-Xj8" secondAttribute="bottom" constant="8" id="L1e-rs-0rC"/>
                             <constraint firstAttribute="centerX" secondItem="yLS-4B-Cjw" secondAttribute="centerX" id="Oce-2o-Adl"/>
+                            <constraint firstAttribute="centerX" secondItem="sNn-GJ-Jir" secondAttribute="centerX" id="WK1-oY-hwD"/>
+                            <constraint firstItem="cJi-On-oPw" firstAttribute="top" secondItem="sNn-GJ-Jir" secondAttribute="bottom" constant="20" id="ZqG-hb-cPD"/>
                             <constraint firstItem="yLS-4B-Cjw" firstAttribute="top" secondItem="lNA-UT-Xj8" secondAttribute="bottom" constant="8" id="axC-TS-ZL2"/>
                         </constraints>
                     </view>
