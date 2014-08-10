@@ -17,6 +17,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
+    var pageViewController : UIPageViewController!
+    
     var userDefaults = NSUserDefaults.standardUserDefaults()
     var authorizedPhotoLibrary = authorizedForPhotoLibrary()
     var authorizedCamera = authorizedForCamera()
@@ -38,6 +40,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        pageViewController = setupPageViewController()
         checkPhotoLibraryAuthorization()
         checkCameraAuthorication()
         setupNSNotificationCenter()
@@ -63,6 +67,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 self.imageView.image = UIImage(data: data)
             }
         }
+    }
+    
+    /// -----------------------------------------------------------------------------------------------
+    
+    func setupPageViewController() -> WelcomePageViewController {
+        let vc = self.storyboard.instantiateViewControllerWithIdentifier("WelcomePageController") as WelcomePageViewController
+        return vc
     }
     
     /// -----------------------------------------------------------------------------------------------
@@ -213,8 +224,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func checkToDisplayFirstTimeBanner() {
+        self.presentViewController(self.pageViewController, animated: true, completion: nil)
+        
         if displayFirstTimeBanner {
             println("TODO display first time banner")
+            self.performSegueWithIdentifier("ShowWelcome", sender: self)
         }
     }
     

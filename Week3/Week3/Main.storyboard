@@ -51,6 +51,47 @@
             </objects>
             <point key="canvasLocation" x="689" y="255"/>
         </scene>
+        <!--Welcome to Week 3-->
+        <scene sceneID="aYB-JX-mVq">
+            <objects>
+                <pageViewController storyboardIdentifier="WelcomePageController" autoresizesArchivedViewToFullSize="NO" title="Welcome to Week 3" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="NiC-Zy-ARC" customClass="WelcomePageViewController" customModule="Week3" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fhN-aZ-emW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-7" y="1034"/>
+        </scene>
+        <!--Welcome View Controller-->
+        <scene sceneID="RX3-CY-gNQ">
+            <objects>
+                <viewController storyboardIdentifier="WelcomePageContent" id="AMJ-hV-SpQ" customClass="WelcomeViewController" customModule="Week3" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gRI-C9-KHj"/>
+                        <viewControllerLayoutGuide type="bottom" id="lA6-xD-RpV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="69p-GV-vyw">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Welcome to Week 3!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mbb-8y-Qsi">
+                                <rect key="frame" x="204" y="28" width="192" height="21"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="mbb-8y-Qsi" secondAttribute="centerX" id="oZP-1p-lfE"/>
+                            <constraint firstItem="mbb-8y-Qsi" firstAttribute="top" secondItem="gRI-C9-KHj" secondAttribute="bottom" constant="8" id="qfZ-Bf-Nh1"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="welcomeLabel" destination="mbb-8y-Qsi" id="oqQ-gH-tng"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zaW-Oj-kVu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-7" y="1716"/>
+        </scene>
         <!--Photo Collection-->
         <scene sceneID="veI-wX-vMY">
             <objects>
