@@ -72,8 +72,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     /// -----------------------------------------------------------------------------------------------
     
     func setupPageViewController() -> WelcomePageViewController {
-        let vc = self.storyboard.instantiateViewControllerWithIdentifier("WelcomePageController") as WelcomePageViewController
-        return vc
+//        let vc = self.storyboard.instantiateViewControllerWithIdentifier("WelcomePageController") as WelcomePageViewController
+        let welcomeStoryBoard = UIStoryboard(name: "Welcome", bundle: NSBundle.mainBundle())
+        return welcomeStoryBoard.instantiateViewControllerWithIdentifier("WelcomePageController") as WelcomePageViewController
     }
     
     /// -----------------------------------------------------------------------------------------------

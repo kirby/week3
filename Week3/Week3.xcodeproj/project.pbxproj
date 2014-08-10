@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4E17D60F1997170300AC41E7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4E17D60E1997170300AC41E7 /* Main.storyboard */; };
+		4E17D611199722B500AC41E7 /* Welcome.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4E17D610199722B500AC41E7 /* Welcome.storyboard */; };
 		4E1D5EA4199339160026F73F /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1D5EA3199339160026F73F /* FiltersViewController.swift */; };
 		4E1D5EA6199339410026F73F /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1D5EA5199339410026F73F /* FilterView.swift */; };
 		4E1D5EA819933AF70026F73F /* FilterViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1D5EA719933AF70026F73F /* FilterViewCell.swift */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		4E17D60E1997170300AC41E7 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		4E17D610199722B500AC41E7 /* Welcome.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Welcome.storyboard; sourceTree = "<group>"; };
 		4E1D5EA3199339160026F73F /* FiltersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
 		4E1D5EA5199339410026F73F /* FilterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		4E1D5EA719933AF70026F73F /* FilterViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterViewCell.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				4E93DB1819901393002B7CA7 /* Images.xcassets */,
 				4E93DB0F19901393002B7CA7 /* Supporting Files */,
 				4E17D60E1997170300AC41E7 /* Main.storyboard */,
+				4E17D610199722B500AC41E7 /* Welcome.storyboard */,
 			);
 			path = Week3;
 			sourceTree = "<group>";
@@ -261,6 +264,7 @@
 			files = (
 				4E93DB1919901393002B7CA7 /* Images.xcassets in Resources */,
 				4E17D60F1997170300AC41E7 /* Main.storyboard in Resources */,
+				4E17D611199722B500AC41E7 /* Welcome.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

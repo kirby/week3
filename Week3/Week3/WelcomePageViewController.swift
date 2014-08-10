@@ -29,9 +29,11 @@ class WelcomePageViewController: UIPageViewController, UIPageViewControllerDataS
         
     }
     
+    // MARK: - WelcomePageViewController
+    
     func viewControllerAtIndex(index : Int) -> WelcomeViewController? {
         
-        if index < 0 || index > self.screenText.count { return nil }
+        if index < 0 || index > (self.screenText.count - 1) { return nil }
         
         let vc = self.storyboard.instantiateViewControllerWithIdentifier("WelcomePageContent") as WelcomeViewController
         self.index = index
@@ -46,15 +48,13 @@ class WelcomePageViewController: UIPageViewController, UIPageViewControllerDataS
     func pageViewController(pageViewController: UIPageViewController!, viewControllerAfterViewController viewController: UIViewController!) -> UIViewController! {
         
         var index = (viewController as WelcomeViewController).index
-        if index == 0 { return nil}
-        
-        return self.viewControllerAtIndex(index - 1)
+        return self.viewControllerAtIndex(index + 1)
+
     }
     
     func pageViewController(pageViewController: UIPageViewController!, viewControllerBeforeViewController viewController: UIViewController!) -> UIViewController! {
         
         var index = (viewController as WelcomeViewController).index
-        
-        return self.viewControllerAtIndex(index + 1)
+        return self.viewControllerAtIndex(index - 1)
     }
 }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6205" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="L8j-Zc-TT6">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6198"/>
+    </dependencies>
+    <scenes>
+        <!--Welcome to Week 3-->
+        <scene sceneID="HEV-to-b0y">
+            <objects>
+                <pageViewController storyboardIdentifier="WelcomePageController" autoresizesArchivedViewToFullSize="NO" title="Welcome to Week 3" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="L8j-Zc-TT6" customClass="WelcomePageViewController" customModule="Week3" customModuleProvider="target" sceneMemberID="viewController">
+                    <connections>
+                        <segue destination="TEE-Tc-HgF" kind="show" id="Bec-nK-yEl"/>
+                    </connections>
+                </pageViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HhU-Ff-QHy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="413" y="410"/>
+        </scene>
+        <!--Welcome View Controller-->
+        <scene sceneID="7GR-H4-PyI">
+            <objects>
+                <viewController storyboardIdentifier="WelcomePageContent" id="TEE-Tc-HgF" customClass="WelcomeViewController" customModule="Week3" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="lNA-UT-Xj8"/>
+                        <viewControllerLayoutGuide type="bottom" id="cJi-On-oPw"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="sn3-F8-m9F">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Welcome to Week 3!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yLS-4B-Cjw">
+                                <rect key="frame" x="204" y="28" width="192" height="21"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="yLS-4B-Cjw" secondAttribute="centerX" id="4OZ-dK-GEG"/>
+                            <constraint firstItem="yLS-4B-Cjw" firstAttribute="top" secondItem="lNA-UT-Xj8" secondAttribute="bottom" constant="8" id="L1e-rs-0rC"/>
+                            <constraint firstAttribute="centerX" secondItem="yLS-4B-Cjw" secondAttribute="centerX" id="Oce-2o-Adl"/>
+                            <constraint firstItem="yLS-4B-Cjw" firstAttribute="top" secondItem="lNA-UT-Xj8" secondAttribute="bottom" constant="8" id="axC-TS-ZL2"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="welcomeLabel" destination="yLS-4B-Cjw" id="tsd-3D-2sn"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="r7P-2z-aqm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1066" y="410"/>
+        </scene>
+    </scenes>
+</document>
