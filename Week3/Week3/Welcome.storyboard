@@ -9,7 +9,7 @@
             <objects>
                 <pageViewController storyboardIdentifier="WelcomePageController" autoresizesArchivedViewToFullSize="NO" title="Welcome to Week 3" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="L8j-Zc-TT6" customClass="WelcomePageViewController" customModule="Week3" customModuleProvider="target" sceneMemberID="viewController">
                     <connections>
-                        <segue destination="TEE-Tc-HgF" kind="show" id="Bec-nK-yEl"/>
+                        <segue destination="TEE-Tc-HgF" kind="show" identifier="ShowWelcomeScreen" id="Bec-nK-yEl"/>
                     </connections>
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HhU-Ff-QHy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -28,14 +28,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Welcome to Week 3!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yLS-4B-Cjw">
-                                <rect key="frame" x="204" y="28" width="192" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Week 3!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yLS-4B-Cjw">
+                                <rect key="frame" x="224" y="28" width="153" height="20"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sNn-GJ-Jir">
-                                <rect key="frame" x="277" y="550" width="46" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sNn-GJ-Jir">
+                                <rect key="frame" x="279" y="550" width="43" height="30"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Got it!">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
